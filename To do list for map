@@ -1,6 +1,26 @@
-0. instalam PyQt6 extension 
-1. define filename constants 
-2. define a map 
-3. render system can draw walla
-4. render system can draw floor and ceilling
-5. collision detection 
+Structura pe fisiere: 
+
+- file pt variabile globale
+- file / director pentru imagini
+- main unde dam call la app 
+    - dam call la functiile de nivele 
+    - si functia care da quit la joc (aka pe care apasam x si merge)
+(astea de mai sus le facem / discutam impreuna)
+
+- file cu get_background / harta principala
+- file cu player
+- file cu inamici / viteza, viata, frecventa de tragere, culoare (RD cu ochi rosii)
+- file pentru fiecare level in care le apelam pe cele generale cu alta matrice de harta 
+
+- file pentru MAIN MENU (avem choose level / quit game - butoane)
+- file pentru level s menu (avem 3 butoane pentru cele 3 nivele care sunt initial locked)
+    - dupa ce termini un nivel le dai unlock cu o cheie (avem intr-un colt cele 3 chei cand apar)
+    - dupa ce le dai complete la niveluri primesti cheia de aur si apare butonul de bo$$ level 
+    - dupa ce bati bo$$ u iti apare felicitari / you ve finished the game 
+
+- fiecare nivel de joc:
+    - harta diferita 
+    - inamicii viata diferita si acuracy mai mare
+    - dar se bazeaza pe codul general de mai sus 
+
+!!! very very important - COMENTARII pt fiecare linie 
