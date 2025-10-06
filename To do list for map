@@ -1,0 +1,6 @@
+0. instalam PyQt6 extension 
+1. define filename constants 
+2. define a map 
+3. render system can draw walla
+4. render system can draw floor and ceilling
+5. collision detection 
