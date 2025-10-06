@@ -1,1 +1,16 @@
-1234
+Documentatie 
+------------
+
+Nume echipa: Rahov Corporation SRL
+Inginer Maistru / Sef de echipa: Morus Alexandru 
+Ingineri: Bahaciu Raisa, Zamfir Irina
+
+Nume proiect: Counter Upb de Craciun
+
+Descriere proiect:
+  - Jucatorul are un personaj, care se afla intr-o lume 2D unde se poate deplasa sus-jos, stanga-dreapta (nu pe diagonala ca e prea greu)
+  - Jucatorul poate sa traga in inamici si inamicii trag si ei la randul lor in jucator 
+  - Harta poate sa aiba pereti / goluri / obstacole 
+  - Exista un sistem de HP, Healing, Damage 
+  - Exista mai multe nivele - la finalul fiecarui nivel primesti o cheie 
+  - Sunt 4 chei - daca le iei pe toate dai unlock la Boss Battle cu Evil RD 
