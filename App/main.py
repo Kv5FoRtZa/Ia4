@@ -12,9 +12,15 @@ LIGHT_PINK   = (255, 182, 193)
 DARK_GREEN   = (0, 100, 0)
 WIDTH=1800
 HEIGHT=1000
-FPS=60
+FPS=25
 PLAYER_VELOCITY=5
-
+x_perete = [0] * 90# salvez coltul stanga sus pt fiecare perete(sunt noob si nu stiu sa fac coliziune fara var globala)
+y_perete = [0] * 90
+matrice_fundal = [0] * 290 # aici o sa avem fundalul codat cu 0 = fundal basic, 1 = perete, -1 = tepi, etc
+#momentan este 0 si se baga 1 din loc in loc pentru perete
+#in get_background fac acesta initializare momentan, insa ea va trebui facuta de mana(pt a avea o harta care arata ok)
+#de retinut ca fiecare poza trebuie trecuta prin get_background
+#afisez poze diferite in draw, in functie de ce se afla in matrice momentan
 pygame.init()
 
 pygame.display.set_caption("game")
@@ -22,22 +28,37 @@ window = pygame.display.set_mode((WIDTH,HEIGHT))
 
 
 #function for getting a tile and positon vector for background
-def get_background(tile_name):
-    image = pygame.image.load(join("assets","Background",tile_name))
-    _, _, width, height = image.get_rect() #gets image's width and height
+def get_background(fundal,zid):
+    #
+    image = pygame.image.load(join("assets","Background",fundal))
+    perete = pygame.image.load(join("assets","Background",zid))
+    _, _, width, height = image.get_rect() #gaseste marimea imaginii
     tiles=[]
-
+    cnt = 0 # cnt si iful sunt momentan pt a genera o matrice
+    cnt2 = 0
+    #vor fi eliminate cand facem matricile si layoutul fundalului de mana
     for i in range (WIDTH // width + 1):
         for j in range (HEIGHT // height + 1):
+            if(i % 2 == 0 and j % 2 == 0):
+                matrice_fundal[cnt] = 1
+                x_perete[cnt2] = (i * 100)
+                y_perete[cnt2] = (j * 100)
+                cnt2 += 1
             pos = (i * width,j* height) #tiles position 
-            tiles.append(pos)
+            tiles.append(
+                pos)
+            cnt = cnt + 1
+    return tiles,image,perete
 
-    return tiles,image
-
-#loop trough all positions and put the tile there
-def draw(window,background,bg_image,player):
+#face loop walls toate pozitiile din fundal si pune bg acolo
+def draw(window,background,bg_image1,bg_image_2,player):
+    cnt = 0
     for tile in background:
-        window.blit(bg_image,tile)
+        if(matrice_fundal[cnt] == 1):
+            window.blit(bg_image_2,tile)
+        else:
+            window.blit(bg_image1,tile)
+        cnt = cnt + 1
 
     player.draw(window)
     pygame.display.update()
@@ -91,7 +112,12 @@ class Player(pygame.sprite.Sprite):
     def move(self,dx,dy):
         self.rect.x += dx
         self.rect.y += dy
-
+        for i in range(0,len(x_perete)):
+            perete_curent = pygame.Rect(x_perete[i], y_perete[i], 100, 100)
+            if self.rect.colliderect(perete_curent):
+                self.rect.x -= dx
+                self.rect.y -= dy
+    
     def move_left(self,vel):
         self.x_vel = -vel
         if self.direction != "left":
@@ -109,12 +135,12 @@ class Player(pygame.sprite.Sprite):
     def move_down(self,vel):
         self.y_vel = vel
 
-    #called once per frame to move caracter
+    #muta caracterul frame by frame
     def loop(self,fps):
         self.move(self.x_vel,self.y_vel)
         self.update_sprite()
 
-    # it updates the frames of the animation
+    # updateaza animatia frame by frame
     def update_sprite(self):
         sprite_sheet = "idle"
         if self.x_vel!=0:
@@ -128,7 +154,7 @@ class Player(pygame.sprite.Sprite):
         self.sprite = sprites[sprite_index]
         self.animation_count +=1
 
-    # prints the character 
+    # afiseaza caracterul
     def draw(self,window):
         window.blit(self.sprite,(self.rect.x,self.rect.y))
 
@@ -137,20 +163,21 @@ def handle_move(player):
     keys = pygame.key.get_pressed()
     player.x_vel=0
     player.y_vel=0
-
-    if keys[pygame.K_LEFT]:
+    #merge pe sageti si pe wasd
+    if (keys[pygame.K_LEFT] or keys[pygame.K_a]):
         player.move_left(PLAYER_VELOCITY)
-    if keys[pygame.K_RIGHT]:
+    if (keys[pygame.K_RIGHT] or keys[pygame.K_d]):
         player.move_right(PLAYER_VELOCITY) 
-    if keys[pygame.K_UP]:
+    if (keys[pygame.K_UP] or keys[pygame.K_w]):
         player.move_up(PLAYER_VELOCITY)
-    if keys[pygame.K_DOWN]:
+    if (keys[pygame.K_DOWN] or keys[pygame.K_s]):
         player.move_down(PLAYER_VELOCITY)
 
 #functia care creeaza ecranul si da quit
 def main(window):
     clock = pygame.time.Clock()
-    background, bg_image = get_background("beigeTile.png")
+    #aici se declara toate tipurile de bg
+    background, bg_image, perete = get_background("beigeTile.png","crate.png")
     player = Player(100,100,50,50)
     run=True
     while run:
@@ -162,7 +189,7 @@ def main(window):
                 break
         player.loop(FPS)
         handle_move(player)
-        draw(window, background,bg_image,player)
+        draw(window, background,bg_image,perete,player)
 
     pygame.quit()
     quit()
