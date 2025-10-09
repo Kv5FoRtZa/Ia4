@@ -1,7 +1,6 @@
 import os
 import random
 import pygame
-import variables
 import math
 from os import listdir
 from os.path import isfile,join
@@ -41,7 +40,6 @@ def draw(window,background,bg_image,player):
         window.blit(bg_image,tile)
 
     player.draw(window)
-
     pygame.display.update()
 
 #ia pozele cu animatia si le face sa fie spre stanga ca ele sunt spre dreapta default
@@ -50,13 +48,17 @@ def flip(sprites):
 
 
 #loads images
+# SPRITE == imagine pe frames 
 def load_sprite_sheets(dir1, dir2, width, height, direction=False):
+    # dir1 - director_for_characters
+    # dir2 - director_for_pink man in this situation 
     path = join("assets", dir1, dir2)
     images = [f for f in listdir(path) if isfile(join(path, f))]
 
     all_sprites = {}
 
     for image in images:
+        # .convert_alpha() says they are transparent 
         sprite_sheet = pygame.image.load(join(path, image)).convert_alpha()
 
         sprites = []
@@ -112,6 +114,7 @@ class Player(pygame.sprite.Sprite):
         self.move(self.x_vel,self.y_vel)
         self.update_sprite()
 
+    # it updates the frames of the animation
     def update_sprite(self):
         sprite_sheet = "idle"
         if self.x_vel!=0:
@@ -125,10 +128,8 @@ class Player(pygame.sprite.Sprite):
         self.sprite = sprites[sprite_index]
         self.animation_count +=1
 
-
+    # prints the character 
     def draw(self,window):
-        #pygame.draw.rect(window,self.COLOR,self.rect)
-
         window.blit(self.sprite,(self.rect.x,self.rect.y))
 
 
@@ -165,8 +166,6 @@ def main(window):
 
     pygame.quit()
     quit()
-
-
 
 
 
