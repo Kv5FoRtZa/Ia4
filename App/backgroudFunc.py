@@ -11,8 +11,7 @@ window = pygame.display.set_mode((WIDTH,HEIGHT))
 
 
 #function for getting a tile and positon vector for background
-def get_background(fundal,zid):
-    #
+def get_background(fundal,zid,x_wall,y_wall,backMatrix):
     image = pygame.image.load(join("assets","Background",fundal))
     perete = pygame.image.load(join("assets","Background",zid))
     _, _, width, height = image.get_rect() #gaseste marimea imaginii
@@ -23,13 +22,12 @@ def get_background(fundal,zid):
     for i in range (WIDTH // width + 1):
         for j in range (HEIGHT // height + 1):
             if(i % 2 == 0 and j % 2 == 0):
-                matrice_fundal[cnt] = 1
-                x_perete[cnt2] = (i * 100)
-                y_perete[cnt2] = (j * 100)
+                backMatrix[cnt][cnt] = 1
+                x_wall[cnt2] = (i * 100)
+                y_wall[cnt2] = (j * 100)
                 cnt2 += 1
             pos = (i * width,j* height) #tiles position 
-            tiles.append(
-                pos)
+            tiles.append(pos)
             cnt = cnt + 1
     return tiles,image,perete
 

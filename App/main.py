@@ -16,7 +16,7 @@ window = pygame.display.set_mode((WIDTH,HEIGHT))
 def main(window):
     clock = pygame.time.Clock()
     #aici se declara toate tipurile de bg
-    background, bg_image, perete = get_background("beigeTile.png","crate.png")
+    background, bg_image, perete = get_background("beigeTile.png","crate.png",x_perete,y_perete,matrice_fundal)
     player = Player(100,100,50,50)
     run=True
     while run:

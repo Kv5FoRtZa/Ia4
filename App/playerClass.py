@@ -55,12 +55,12 @@ class Player(pygame.sprite.Sprite):
         self.mask = None
         self.direction = "left"
         self.animation_count = 0
-    def move(self,dx,dy):
+    def move(self,dx,dy,x_wall,y_wall):
         self.rect.x += dx
         self.rect.y += dy
-        for i in range(0,len(x_perete)):
-            perete_curent = pygame.Rect(x_perete[i], y_perete[i], 100, 100)
-            if self.rect.colliderect(perete_curent):
+        for i in range(0,len(x_wall)):
+            current_wall = pygame.Rect(x_wall[i], y_wall[i], 100, 100)
+            if self.rect.colliderect(current_wall):
                 self.rect.x -= dx
                 self.rect.y -= dy
     
@@ -83,7 +83,7 @@ class Player(pygame.sprite.Sprite):
 
     #muta caracterul frame by frame
     def loop(self,fps):
-        self.move(self.x_vel,self.y_vel)
+        self.move(self.x_vel,self.y_vel,x_perete,y_perete)
         self.update_sprite()
 
     # updateaza animatia frame by frame
