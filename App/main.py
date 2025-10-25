@@ -7,17 +7,20 @@ from os.path import isfile,join
 from global_variables import *
 from backgroudFunc import *
 from playerClass import *
+from objectClass import *
 pygame.init()
 pygame.display.set_caption("game")
-window = pygame.display.set_mode((WIDTH,HEIGHT))
+from playerClass import window
 
 
 #functia care creeaza ecranul si da quit
 def main(window):
     clock = pygame.time.Clock()
     #aici se declara toate tipurile de bg
-    background, bg_image, perete = get_background("beigeTile.png","crate.png",x_perete,y_perete,matrice_fundal)
+    background, bg_image = get_background("beigeTile.png")
     player = Player(100,100,50,50)
+    walls=[Block(0,HEIGHT-100,100)]
+
     run=True
     while run:
         clock.tick(FPS)
@@ -28,7 +31,7 @@ def main(window):
                 break
         player.loop(FPS)
         handle_move(player)
-        draw(window, background,bg_image,perete,player)
+        draw(window, background,bg_image,player,walls)
 
     pygame.quit()
     quit()
