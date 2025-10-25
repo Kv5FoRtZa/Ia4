@@ -8,23 +8,20 @@ import pygame
 import sys
 import time
 from pygame.locals import *
-
-# initiating the pygame window 
-pygame.init()
-
-## global variables 
-
-# Surface size 
-width = 1024 # idk marimea yet - se poate modifica
-height = 1024 
-
-# Colors used throughout the project 
-white = (255, 255, 255)
-black = (0, 0, 0)
-
-# frames per second and time tracker 
-fps = 30
-CLOCK = pygame.time.Clock()
-
-# setting up the Surface size 
-screen = pygame.display.set_mode((width, height), 0, 32)
+x_perete = [0] * 90# salvez coltul stanga sus pt fiecare perete(sunt noob si nu stiu sa fac coliziune fara var globala)
+y_perete = [0] * 90
+matrice_fundal = [0] * 290 # aici o sa avem fundalul codat cu 0 = fundal basic, 1 = perete, -1 = tepi, etc
+#momentan este 0 si se baga 1 din loc in loc pentru perete
+#in get_background fac acesta initializare momentan, insa ea va trebui facuta de mana(pt a avea o harta care arata ok)
+#de retinut ca fiecare poza trebuie trecuta prin get_background
+#afisez poze diferite in draw, in functie de ce se afla in matrice momentan
+WHITE=(255,255,255)
+BLACK=(0,0,0)
+LIGHT_BLUE   = (173, 216, 230)  
+BLUE_MUTED   = (70, 130, 180)   
+LIGHT_PINK   = (255, 182, 193)  
+DARK_GREEN   = (0, 100, 0)
+WIDTH=1800
+HEIGHT=1000
+FPS=25
+PLAYER_VELOCITY=5
