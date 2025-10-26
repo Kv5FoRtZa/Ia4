@@ -21,6 +21,7 @@ def main(window):
     player = Player(100,100,50,50)
     walls=[Block(0,HEIGHT-100,100)]
 
+    # comentariu de test git commit 
     run=True
     while run:
         clock.tick(FPS)
