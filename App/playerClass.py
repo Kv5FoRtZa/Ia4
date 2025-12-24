@@ -57,6 +57,8 @@ class Player(pygame.sprite.Sprite):
         self.mask = None
         self.direction = "left"
         self.animation_count = 0
+        self.max_hp = 100
+        self.hp = 100
         self.update_sprite() 
         self.update_mask()
     def move(self, dx, dy, objects):
@@ -108,11 +110,13 @@ class Player(pygame.sprite.Sprite):
         self.y_vel = vel
 
     #muta caracterul frame by frame
-    def loop(self, fps, objects):
-        self.move(self.x_vel, self.y_vel, objects)
+    def loop(self, fps, walls,traps):
         self.update_sprite()
         # Ne asigurăm că avem o mască validă imediat după schimbarea sprite-ului
         self.update_mask()
+        self.move(self.x_vel, self.y_vel, walls)
+        self.check_traps(traps)
+
 
     # updateaza animatia frame by frame
     def update_sprite(self):
@@ -133,6 +137,22 @@ class Player(pygame.sprite.Sprite):
 
     def draw(self,window):
         window.blit(self.sprite,(self.rect.x,self.rect.y))
+    def take_damage(self, amount):
+        self.hp -= amount
+        if self.hp < 0:
+            self.hp = 0
+        print(f"Ai luat damage! HP rămas: {self.hp}")
+    def check_traps(self, traps):
+        for trap in traps:
+            if pygame.sprite.collide_mask(self, trap):
+                self.take_damage(1)
+                # Aici poți adăuga knockback ușor, pentru că ești deja în clasă
+                # De exemplu: ne aruncă puțin în sus
+                # self.y_vel = -10
+    
+
+
+
 
 def handle_move(player):
     keys = pygame.key.get_pressed()

@@ -7,7 +7,6 @@ from os.path import isfile,join
 from global_variables import x_perete,y_perete,matrice_fundal,WIDTH,HEIGHT,FPS,LIGHT_BLUE,PLAYER_VELOCITY
 pygame.init()
 pygame.display.set_caption("game")
-from playerClass import window
 
 
 #function for getting a tile and positon vector for background
@@ -32,5 +31,28 @@ def draw(window,background,bg_image,player,walls):
             wall.draw(window)
 
     player.draw(window)
-    pygame.display.update()
 
+def draw_health_bar(window, player):
+    # Configurare bara
+    bar_width = 200
+    bar_height = 20
+    x_pos = 20  # Distanța de la stânga ecranului
+    y_pos = 20  # Distanța de sus
+    
+    # Calculăm cât din bară trebuie să fie verde (procentaj)
+    # Formula: (HP curent / HP maxim) * Lățime totală
+    ratio = player.hp / player.max_hp
+    fill_width = ratio * bar_width
+    
+    # Dreptunghiul de fundal (Roșu - arată cât damage ai luat)
+    border_rect = pygame.Rect(x_pos, y_pos, bar_width, bar_height)
+    
+    # Dreptunghiul de viață (Verde - arată câtă viață mai ai)
+    fill_rect = pygame.Rect(x_pos, y_pos, fill_width, bar_height)
+    
+    # Desenăm dreptunghiurile
+    pygame.draw.rect(window, (255, 0, 0), border_rect) # Fundal Roșu
+    pygame.draw.rect(window, (0, 255, 0), fill_rect)   # Viață Verde
+    
+    # Opțional: Un contur alb pentru aspect mai plăcut
+    pygame.draw.rect(window, (255, 255, 255), border_rect, 2)
