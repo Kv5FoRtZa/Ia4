@@ -29,7 +29,7 @@ def main(window):
             if event.type ==pygame.QUIT:
                 run=False
                 break
-        player.loop(FPS)
+        player.loop(FPS, walls)
         handle_move(player)
         draw(window, background,bg_image,player,walls)
 

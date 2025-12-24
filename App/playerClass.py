@@ -57,14 +57,38 @@ class Player(pygame.sprite.Sprite):
         self.mask = None
         self.direction = "left"
         self.animation_count = 0
-    def move(self,dx,dy,x_wall,y_wall):
-        self.rect.x += dx
-        self.rect.y += dy
-        for i in range(0,len(x_wall)):
-            current_wall = pygame.Rect(x_wall[i], y_wall[i], 100, 100)
-            if self.rect.colliderect(current_wall):
-                self.rect.x -= dx
-                self.rect.y -= dy
+        self.update_sprite() 
+        self.update_mask()
+    def move(self, dx, dy, objects):
+            # 1. Mișcare pe axa X
+            self.rect.x += dx
+            self.update_mask()
+            for obj in objects:
+                if pygame.sprite.collide_mask(self, obj):
+                    # Mergem DREAPTA -> Lovim un perete aflat în dreapta noastră
+                    if dx > 0 and obj.rect.left >= self.rect.left:
+                        self.rect.right = obj.rect.left
+                
+                    # Mergem STÂNGA -> Lovim un perete aflat în stânga noastră
+                    elif dx < 0 and obj.rect.right <= self.rect.right:
+                        self.rect.left = obj.rect.right
+                
+                    self.update_mask()
+
+            # 2. Mișcare pe axa Y
+            self.rect.y += dy
+            self.update_mask()
+            for obj in objects:
+                if pygame.sprite.collide_mask(self, obj):
+                    # Mergem JOS -> Lovim un perete aflat SUB noi
+                    if dy > 0 and obj.rect.top >= self.rect.top:
+                        self.rect.bottom = obj.rect.top
+
+                    # Mergem SUS -> Lovim un perete aflat DEASUPRA noastră
+                    elif dy < 0 and obj.rect.bottom <= self.rect.bottom:
+                        self.rect.top = obj.rect.bottom
+
+                    self.update_mask()
     
     def move_left(self,vel):
         self.x_vel = -vel
@@ -84,9 +108,11 @@ class Player(pygame.sprite.Sprite):
         self.y_vel = vel
 
     #muta caracterul frame by frame
-    def loop(self,fps):
-        self.move(self.x_vel,self.y_vel,x_perete,y_perete)
+    def loop(self, fps, objects):
+        self.move(self.x_vel, self.y_vel, objects)
         self.update_sprite()
+        # Ne asigurăm că avem o mască validă imediat după schimbarea sprite-ului
+        self.update_mask()
 
     # updateaza animatia frame by frame
     def update_sprite(self):
@@ -101,11 +127,12 @@ class Player(pygame.sprite.Sprite):
         sprite_index = self.animation_count//self.ANIMATION_DELAY % len(sprites)
         self.sprite = sprites[sprite_index]
         self.animation_count +=1
+    def update_mask(self):
+        # Creează o mască din imaginea curentă a sprite-ului
+        self.mask = pygame.mask.from_surface(self.sprite)
 
-    # afiseaza caracterul
     def draw(self,window):
         window.blit(self.sprite,(self.rect.x,self.rect.y))
-
 
 def handle_move(player):
     keys = pygame.key.get_pressed()
@@ -120,3 +147,6 @@ def handle_move(player):
         player.move_up(PLAYER_VELOCITY)
     if (keys[pygame.K_DOWN] or keys[pygame.K_s]):
         player.move_down(PLAYER_VELOCITY)
+
+
+
