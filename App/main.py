@@ -78,7 +78,7 @@ def main(window):
     walls = [Block(0, HEIGHT-100, 100)]
     traps = [Trap(200, 200, 50, 50)]
 
-    run = True
+    run=True
     while run:
         clock.tick(FPS)
 
