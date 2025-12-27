@@ -17,10 +17,12 @@ matrice_fundal = [0] * 290 # aici o sa avem fundalul codat cu 0 = fundal basic, 
 #afisez poze diferite in draw, in functie de ce se afla in matrice momentan
 WHITE=(255,255,255)
 BLACK=(0,0,0)
-LIGHT_BLUE   = (173, 216, 230)  
+LIGHT_BLUE   = (173, 216, 230)
 BLUE_MUTED   = (70, 130, 180)   
 LIGHT_PINK   = (255, 182, 193)  
 DARK_GREEN   = (0, 100, 0)
+GRAY = (150, 150, 150)
+DARK_GRAY = (50, 50, 50)
 WIDTH=1800
 HEIGHT=1000
 FPS=30

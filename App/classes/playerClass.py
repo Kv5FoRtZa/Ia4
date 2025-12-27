@@ -4,7 +4,7 @@ import pygame
 import math
 from os import listdir
 from os.path import isfile,join
-from global_variables import x_perete,y_perete,matrice_fundal,WIDTH,HEIGHT,FPS,LIGHT_BLUE,PLAYER_VELOCITY
+from utils.global_variables import x_perete,y_perete,matrice_fundal,WIDTH,HEIGHT,FPS,LIGHT_BLUE,PLAYER_VELOCITY
 pygame.init()
 pygame.display.set_caption("game")
 window = pygame.display.set_mode((WIDTH,HEIGHT))

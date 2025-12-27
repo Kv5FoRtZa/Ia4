@@ -5,10 +5,12 @@ import math
 import sys
 from os import listdir
 from os.path import isfile, join
-from global_variables import *
-from backgroudFunc import *
-from playerClass import *
-from objectClass import *
+from utils.global_variables import *
+from utils.backgroudFunc import *
+from classes.playerClass import *
+from classes.objectClass import *
+from level_menu import levels_menu
+from classes.levelClass import *
 
 pygame.init()
 pygame.font.init() # Inițializăm modulul de fonturi
@@ -17,7 +19,6 @@ pygame.display.set_caption("PinkMan Adventure")
 window = pygame.display.set_mode((WIDTH, HEIGHT)) 
 
 def get_font(size): 
-
     return pygame.font.SysFont("comicsans", size)
 
 def main_menu(window):
@@ -26,7 +27,7 @@ def main_menu(window):
     
     while run:
         clock.tick(FPS)
-        window.fill(BG_COLOR if 'BG_COLOR' in globals() else (94, 129, 162))
+        window.fill((94, 129, 162))
         
         # 1. Titlul
         title_font = get_font(100)
@@ -51,6 +52,14 @@ def main_menu(window):
                 if instruct_rect.collidepoint(mouse_pos):
                     run = False
 
+# TODO: in loc de 1, 2, 3 trebuie sa cream hartile nivelelor 
+def create_levels():
+    # Level("unlocked", 0, create_map(1))
+    # si in create_map(1) -- gameMap() --apelam constructorul clasei : propun sa se num gameMap
+    # 1 / 2 / 3 -- dificultatea nivelului (mai multe spike uri / trapuri etc)
+    levels = [Level("Level 1", "unlocked", 0, 1), Level("Level 2", "locked", 0, 2), Level("Level 3", "locked", 0, 3)]
+    return levels
+
 # Funcția care creează ecranul și rulează jocul
 def main(window):
     clock = pygame.time.Clock()
@@ -58,6 +67,10 @@ def main(window):
     # --- PASUL 1: RULĂM MENIUL ---
     main_menu(window)
     # -----------------------------
+
+    # Levels array 
+    levels = create_levels()
+    levels_menu(window, levels)
 
     # Aici se declară toate tipurile de bg
     background, bg_image = get_background("beigeTile.png")
