@@ -11,7 +11,9 @@ from classes.playerClass import *
 from classes.objectClass import *
 from level_menu import levels_menu
 from classes.levelClass import *
-
+from classes.bulletClass import *
+from classes.enemyClass import *
+from classes.overlapClass import *
 pygame.init()
 pygame.font.init() # Inițializăm modulul de fonturi
 
@@ -24,11 +26,11 @@ def get_font(size):
 def main_menu(window):
     run = True
     clock = pygame.time.Clock()
-    
+
     while run:
         clock.tick(FPS)
         window.fill((94, 129, 162))
-        
+
         # 1. Titlul
         title_font = get_font(100)
         title_text = title_font.render("PINKMAN ADVENTURE", True, (255, 255, 255))
@@ -77,11 +79,39 @@ def main(window):
     player = Player(100, 100, 50, 50)
     walls = [Block(0, HEIGHT-100, 100)]
     traps = [Trap(200, 200, 50, 50)]
-
+    bullets = []
+    enemy_bullets = []
+    rd = enemy(100, 410, 64, 64, 300)
+    start_time = time.time()
+    cnt_tras = 0
     run=True
     while run:
+        cnt_tras += 1
         clock.tick(FPS)
-
+        for bullet in bullets:
+            if bullet.facing == 1 or bullet.facing == -1:
+                if abs(bullet.x - player.rect.x) < 1000:
+                    bullet.x += 2 * bullet.vel
+                else:
+                    bullets.pop(bullets.index(bullet))  
+            if overlap(rd.x + 32,rd.y + 32,64,bullet.x,bullet.y,bullet.radius):
+                bullets.pop(bullets.index(bullet))
+                rd.damage()        
+        x = random.randint(10,30)
+        for bullet in enemy_bullets:
+            if bullet.facing == 1 or bullet.facing == -1:
+                if abs(bullet.x - rd.x) < 1000:
+                    bullet.x += 2 * bullet.vel
+                else:
+                    enemy_bullets.pop(enemy_bullets.index(bullet))
+            if overlap(player.rect.x + 25,player.rect.y + 25,50,bullet.x,bullet.y,bullet.radius):
+                enemy_bullets.pop(enemy_bullets.index(bullet))
+                player.take_damage(10)
+        if (cnt_tras) % x == 0:
+            if rd.vel >= 0:
+                enemy_bullets.append(bullet_class(round(rd.x + 25), round(rd.y + 25), 6, (255,0,0), 1)) 
+            else:
+                enemy_bullets.append(bullet_class(round(rd.x + 25), round(rd.y + 25), 6, (255,0,0), -1)) 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -89,10 +119,17 @@ def main(window):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_t:
                     player.take_damage(10) # Scade 10 HP la fiecare apăsare
-        
+            if event.type == pygame.MOUSEBUTTONUP:
+                #print("ai tras")
+                if player.direction == 'left':
+                    facing = -1
+                else:
+                    facing = 1
+                if len(bullets) < 16:
+                    bullets.append(bullet_class(round(player.rect.x + 25), round(player.rect.y + 25), 6, (0,0,0), facing)) 
         player.loop(FPS, walls,traps)
         handle_move(player)
-        draw(window, background, bg_image, player, walls+traps)
+        draw(window, background, bg_image, player, walls+traps,bullets,rd,enemy_bullets)
         draw_health_bar(window, player)
         pygame.display.update()
 
