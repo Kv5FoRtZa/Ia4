@@ -11,6 +11,7 @@ from classes.playerClass import *
 from classes.objectClass import *
 from level_menu import levels_menu
 from classes.levelClass import *
+from classes.gameMapClass import GameMap
 
 pygame.init()
 pygame.font.init() # Inițializăm modulul de fonturi
@@ -57,7 +58,29 @@ def create_levels():
     # Level("unlocked", 0, create_map(1))
     # si in create_map(1) -- gameMap() --apelam constructorul clasei : propun sa se num gameMap
     # 1 / 2 / 3 -- dificultatea nivelului (mai multe spike uri / trapuri etc)
-    levels = [Level("Level 1", "unlocked", 0, 1), Level("Level 2", "locked", 0, 2), Level("Level 3", "locked", 0, 3)]
+
+    # 18 coloane (1800/100) si 10 randuri (1000/100)
+    # am facut tiles de 100 -- putem decide sa fie mai mici
+    layout1 = [
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    ]
+
+    map1 = GameMap(layout1, tile_size=100)
+
+    levels = [
+        Level("Level 1", "unlocked", 0, map1),
+        Level("Level 2", "locked", 0, None),
+        Level("Level 3", "locked", 0, None)
+    ]
     return levels
 
 # Funcția care creează ecranul și rulează jocul
@@ -68,15 +91,17 @@ def main(window):
     main_menu(window)
     # -----------------------------
 
-    # Levels array 
+    # Levels array and displaying the levels' menu
     levels = create_levels()
     levels_menu(window, levels)
 
+    # current level and it's game_map
+    current_level = levels[0]
+    game_map = current_level.getMap()
+
     # Aici se declară toate tipurile de bg
-    background, bg_image = get_background("beigeTile.png")
+    background_tiles, bg_image = get_background("beigeTile.png")
     player = Player(100, 100, 50, 50)
-    walls = [Block(0, HEIGHT-100, 100)]
-    traps = [Trap(200, 200, 50, 50)]
 
     run=True
     while run:
@@ -90,10 +115,17 @@ def main(window):
                 if event.key == pygame.K_t:
                     player.take_damage(10) # Scade 10 HP la fiecare apăsare
         
-        player.loop(FPS, walls,traps)
+        # rulam frumos playerul si sa se miste frumos
+        player.loop(FPS, game_map.walls, game_map.traps)
         handle_move(player)
-        draw(window, background, bg_image, player, walls+traps)
+
+        # am facut o functie noua de draw in backgroundFunc 
+        # OBS - am pastrat si draw ul vechi in caz de (se numeste draw_vechi)
+        draw(window, background_tiles, bg_image, player, current_level)
+
+        # desenam health bar
         draw_health_bar(window, player)
+        
         pygame.display.update()
 
     pygame.quit()

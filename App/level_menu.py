@@ -2,7 +2,7 @@ import pygame
 import time
 import sys
 from classes.levelClass import *
-from utils.global_variables import WIDTH, HEIGHT, LIGHT_BLUE, WHITE, BLACK, DARK_GRAY, FPS
+from utils.global_variables import WIDTH, HEIGHT, LIGHT_BLUE, WHITE, BLACK, DARK_GRAY, GRAY, FPS
 
 # de facut o clasa levels:
     # starea_nivelului : locked / unlocked
@@ -27,10 +27,22 @@ def draw_button(window, level, text, x, y, width, height):
 
     # draw the button
     button_rect = pygame.Rect(x, y, width, height)
-    pygame.draw.rect(window, WHITE, button_rect, border_radius=12)
+
+    # nivel care e unlocked si poate fi jucat
+    if(level.getWinStatus() == 0 and level.getState() == "unlocked"):
+        pygame.draw.rect(window, WHITE, button_rect, border_radius=12)
+
+    # nivel care e locked (de pus un lacat peste ??)
+    if(level.getState() == "locked"):
+        pygame.draw.rect(window, GRAY, button_rect, border_radius=12)
+
+    # de adaugat o poza cu o coroana idk -- level care a fost deja jucat si castigat
+    if(level.getWinStatus() == 1):
+        pygame.draw.rect(window, (252, 215, 30), button_rect, border_radius=12)
+    
     pygame.draw.rect(window, BLACK, button_rect, 3, border_radius=12)
 
-    # add the text 
+    # add the text
     text_font = get_font(40)
     text_surface = text_font.render(text, True, BLACK)
     text_rect = text_surface.get_rect(center = button_rect.center)
