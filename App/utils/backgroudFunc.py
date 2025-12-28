@@ -23,7 +23,7 @@ def get_background(fundal):
     return tiles,image
 
 #face loop walls toate pozitiile din fundal si pune bg acolo
-def draw(window,background,bg_image,player,walls,bullets,rd,enemy_b):
+def draw(window,background,bg_image,player,walls,bullets,rd,enemy_b,nr_rd):
     cnt = 0
     for tile in background:
             window.blit(bg_image,tile)
@@ -33,7 +33,8 @@ def draw(window,background,bg_image,player,walls,bullets,rd,enemy_b):
         bullet.draw(window)
     for bullet in enemy_b:
         bullet.draw(window)
-    rd.draw(window)
+    for i in range(1,nr_rd - 1):  
+        rd[i].draw(window)
     player.draw(window)
 
 def draw_health_bar(window, player):
