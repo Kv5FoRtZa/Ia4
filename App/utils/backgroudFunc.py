@@ -25,17 +25,7 @@ def get_background(fundal):
             tiles.append(pos)
     return tiles,image
 
-#face loop walls toate pozitiile din fundal si pune bg acolo
-def draw_vechi(window,background,bg_image,player,walls):
-    cnt = 0
-    for tile in background:
-            window.blit(bg_image,tile)
-    for wall in walls:
-            wall.draw(window)
-
-    player.draw(window)
-
-def draw(window, background_tiles, bg_image, player, current_level):
+def draw(window, background_tiles, bg_image, player, current_level, bullets, rd, enemy_b, nr_rd):
     # punem background 
     for tile in background_tiles:
         window.blit(bg_image, tile)
@@ -44,6 +34,15 @@ def draw(window, background_tiles, bg_image, player, current_level):
     game_map = current_level.getMap() 
     if game_map:
         game_map.draw(window)
+
+    # desenam rd-ei si bullets 
+    for bullet in bullets:
+        bullet.draw(window)
+    for bullet in enemy_b:
+        bullet.draw(window)
+    for i in range(1,nr_rd - 1):
+        if (rd[i].hp > 0):
+            rd[i].draw(window)
 
     # desenam playerul
     player.draw(window)

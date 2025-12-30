@@ -12,12 +12,18 @@ from classes.objectClass import *
 from level_menu import levels_menu
 from classes.levelClass import *
 from classes.gameMapClass import GameMap
+from classes.bulletClass import *
+from classes.enemyClass import *
+from classes.overlapClass import *
+from utils.enemyLogicFunc import *
 
 pygame.init()
 pygame.font.init() # Inițializăm modulul de fonturi
 
 pygame.display.set_caption("PinkMan Adventure")
 window = pygame.display.set_mode((WIDTH, HEIGHT)) 
+
+# BIG TODO: de mutat toate metodele din main intr-un fisier ajutator
 
 def get_font(size): 
     return pygame.font.SysFont("comicsans", size)
@@ -53,6 +59,18 @@ def main_menu(window):
                 if instruct_rect.collidepoint(mouse_pos):
                     run = False
 
+def winning_message(window):
+    win_font = get_font(100)
+    win_text = win_font.render("LEVEL COMPLETE!", True, (255, 215, 0))
+    win_rect = win_text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+    
+    overlay = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
+    overlay.fill((0, 0, 0, 150))
+    window.blit(overlay, (0,0))
+    
+    window.blit(win_text, win_rect)
+    pygame.display.update()
+
 # TODO: in loc de 1, 2, 3 trebuie sa cream hartile nivelelor 
 def create_levels():
     # Level("unlocked", 0, create_map(1))
@@ -83,6 +101,29 @@ def create_levels():
     ]
     return levels
 
+def create_rd(rand_X, nr_rd):
+    rd = []
+    x = random.randint(20,60)
+    y = random.randint(20,60)
+    copie = x
+    for i in range(1,nr_rd):
+        x += copie
+        y += x
+        nu_fi_identic = random.randint(30,50)
+        rand_X[i] = random.randint(10,30)
+        rd.append(enemy(x, y, 64, 64, 300 + 2 * x + nu_fi_identic))
+
+    return rd
+
+def check_win_condition(rd, nr_rd):
+    if not rd:
+        return True
+    
+    for i in range(1, nr_rd - 1):
+        if (rd[i].hp > 0):
+            return False
+    return True
+
 # Funcția care creează ecranul și rulează jocul
 def main(window):
     clock = pygame.time.Clock()
@@ -103,9 +144,23 @@ def main(window):
     background_tiles, bg_image = get_background("beigeTile.png")
     player = Player(100, 100, 50, 50)
 
+    # bullets rd-ei si helperi pt ele
+    bullets = []
+    enemy_bullets = []
+    nr_rd = 5
+    rand_X = [10, 10, 10, 10, 10, 10, 10]
+    rd = create_rd(rand_X, nr_rd)
+    cnt_tras = 0
+
     run=True
     while run:
+        cnt_tras += 1
         clock.tick(FPS)
+
+        # handles the shooting logic
+        handle_player_bullets_logic(bullets, player, rd, nr_rd)
+        handle_enemy_bullets_logic(enemy_bullets, player, rd)
+        handle_enemy_shooting(rd, enemy_bullets, cnt_tras, nr_rd, rand_X)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -114,19 +169,35 @@ def main(window):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_t:
                     player.take_damage(10) # Scade 10 HP la fiecare apăsare
-        
+            if event.type == pygame.MOUSEBUTTONUP:  # tragere de gloante ale player-ului
+                if player.direction == 'left':
+                    facing = -1
+                else:
+                    facing = 1
+                if len(bullets) < 16:
+                    bullets.append(bullet_class(round(player.rect.x + 25), round(player.rect.y + 25), 6, (0,0,0), facing,0)) 
+
         # rulam frumos playerul si sa se miste frumos
         player.loop(FPS, game_map.walls, game_map.traps)
         handle_move(player)
 
-        # am facut o functie noua de draw in backgroundFunc 
-        # OBS - am pastrat si draw ul vechi in caz de (se numeste draw_vechi)
-        draw(window, background_tiles, bg_image, player, current_level)
+        # am facut o functie noua de draw in backgroundFunc -- am bagat rd-ei in ea
+        draw(window, background_tiles, bg_image, player, current_level, bullets, rd, enemy_bullets, nr_rd)
 
         # desenam health bar
         draw_health_bar(window, player)
         
         pygame.display.update()
+
+        # daca s a castigat -- marcam in nivel si ne intoarcem la meniu
+        # TODO: a while in a while sa ne intoarcem cu adevarat la meniu
+        if check_win_condition(rd, nr_rd) is True:
+            draw(window, background_tiles, bg_image, player, current_level, bullets, rd, enemy_bullets, nr_rd)
+            pygame.display.update()
+            winning_message(window)
+            current_level.setWinStatus(1)
+            pygame.time.delay(3000)
+            run = False
 
     pygame.quit()
     sys.exit() # Folosim sys.exit() pentru a închide curat
