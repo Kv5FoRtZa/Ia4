@@ -81,6 +81,7 @@ def levels_menu(window, levels):
                     if (levels[0].getState() == "locked"):
                         print("Level 1 is locked") # message on screen that level is locked
                     else:
+                        chosen_level = levels[0]
                         run = False
 
                     # apelat din main si se opreste si intra in harta aia
@@ -89,13 +90,17 @@ def levels_menu(window, levels):
                     if (levels[1].getState() == "locked"):
                         print("Level 2 is locked") # message on screen that level is locked
                     else:
+                        chosen_level = levels[1]
                         run = False
 
                 elif button3.collidepoint(mouse_pos):
                     if (levels[2].getState() == "locked"):
                         print("Level 3 is locked") # message on screen that level is locked
                     else:
+                        chosen_level = levels[2]
                         run = False
+    
+    return chosen_level
 
 if __name__ == "__main__":
     levels = [Level("unlocked", 1), Level("locked", 2), Level("locked", 3)]
