@@ -74,7 +74,7 @@ def play_game(window, current_level):
     enemy_bullets = []
     nr_rd = 5
     rand_X = [10, 10, 10, 10, 10, 10, 10]
-    rd = create_rd(rand_X, nr_rd)
+    rd = create_rd(rand_X, nr_rd,game_map)
     cnt_tras = 0
 
     run=True
@@ -83,8 +83,8 @@ def play_game(window, current_level):
         clock.tick(FPS)
 
         # handles the shooting logic
-        handle_player_bullets_logic(bullets, player, rd, nr_rd)
-        handle_enemy_bullets_logic(enemy_bullets, player, rd)
+        handle_player_bullets_logic(bullets, player, rd, nr_rd,game_map)
+        handle_enemy_bullets_logic(enemy_bullets, player, rd,game_map)
         handle_enemy_shooting(rd, enemy_bullets, cnt_tras, nr_rd, rand_X)
 
         for event in pygame.event.get():
@@ -107,7 +107,7 @@ def play_game(window, current_level):
         handle_move(player)
 
         # am facut o functie noua de draw in backgroundFunc -- am bagat rd-ei in ea
-        draw(window, background_tiles, bg_image, player, current_level, bullets, rd, enemy_bullets, nr_rd)
+        draw(window, background_tiles, bg_image, player, current_level, bullets, rd, enemy_bullets, nr_rd,game_map)
 
         # desenam health bar
         draw_health_bar(window, player)
@@ -116,14 +116,14 @@ def play_game(window, current_level):
 
         # daca s a castigat -- marcam in nivel si ne intoarcem la meniu
         if check_win_condition(rd, nr_rd) is True:
-            draw(window, background_tiles, bg_image, player, current_level, bullets, rd, enemy_bullets, nr_rd)
+            draw(window, background_tiles, bg_image, player, current_level, bullets, rd, enemy_bullets, nr_rd,game_map)
             winning_message(window)
             current_level.setWinStatus(1)
             pygame.time.delay(3000)
             run = False
 
         if check_loss_condition(player) is True:
-            draw(window, background_tiles, bg_image, player, current_level, bullets, rd, enemy_bullets, nr_rd)
+            draw(window, background_tiles, bg_image, player, current_level, bullets, rd, enemy_bullets, nr_rd,game_map)
             losing_message(window)
             pygame.time.delay(3000)
             run = False

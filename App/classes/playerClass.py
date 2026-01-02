@@ -167,6 +167,3 @@ def handle_move(player):
         player.move_up(PLAYER_VELOCITY)
     if (keys[pygame.K_DOWN] or keys[pygame.K_s]):
         player.move_down(PLAYER_VELOCITY)
-
-
-

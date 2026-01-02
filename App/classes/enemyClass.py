@@ -6,6 +6,8 @@ import time
 from os import listdir
 from os.path import isfile,join
 from classes.bulletClass import *
+from classes.overlapClass import *
+
 class enemy(object):
     walk = [pygame.image.load(join("assets","MainCharacters","RD","RD.png"))]
     
@@ -18,20 +20,40 @@ class enemy(object):
         self.walkCount = 0
         self.vel = 3
         self.hp = 2
-    def draw(self, win):
-        self.move()
+    def draw(self, win,game_map):
+        self.move(game_map)
         win.blit((self.walk[0]), (self.x,self.y))
-    def move(self):
+    def move(self,game_map):
         if self.vel > 0:
             if self.x < self.path[1] + self.vel:
-                self.x += self.vel
+                vf = 0
+                for i in range(len(game_map.walls)):
+                     if square_square_overlap(game_map.walls[i].x + 50,game_map.walls[i].y + 50,100,self.x + 32,self.y + 32,64):
+                         vf = 1
+                         break
+                if vf == 0:
+                    self.x += self.vel
+                else:
+                    self.vel = self.vel * -1
+                    self.x += self.vel
+                    self.walkCount = 0
             else:
                 self.vel = self.vel * -1
                 self.x += self.vel
                 self.walkCount = 0
         else:
             if self.x > self.path[0] - self.vel:
-                self.x += self.vel
+                vf = 0
+                for i in range(len(game_map.walls)):
+                     if square_square_overlap(game_map.walls[i].x + 50,game_map.walls[i].y + 50,100,self.x + 32,self.y + 32,64):
+                         vf = 1
+                         break
+                if vf == 0:
+                    self.x += self.vel
+                else:
+                    self.vel = self.vel * -1
+                    self.x += self.vel
+                    self.walkCount = 0
             else:
                 self.vel = self.vel * -1
                 self.x += self.vel

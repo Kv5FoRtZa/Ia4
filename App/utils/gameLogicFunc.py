@@ -90,7 +90,7 @@ def create_levels():
     ]
     return levels
 
-def create_rd(rand_X, nr_rd):
+def create_rd(rand_X, nr_rd,game_map):
     rd = []
     x = random.randint(20,60)
     y = random.randint(20,60)
@@ -100,7 +100,14 @@ def create_rd(rand_X, nr_rd):
         y += x
         nu_fi_identic = random.randint(30,50)
         rand_X[i] = random.randint(10,30)
-        rd.append(enemy(x, y, 64, 64, 300 + 2 * x + nu_fi_identic))
+        vf = 0
+        for j in range(len(game_map.walls)):
+            if square_square_overlap(game_map.walls[j].x + 50,game_map.walls[j].y + 50,100,x + 32,y + 32,64):
+                vf = 1
+        if vf == 0:
+            rd.append(enemy(x, y, 64, 64, 300 + 2 * x + nu_fi_identic))
+        else:
+            nr_rd  = nr_rd + 1
 
     return rd
 

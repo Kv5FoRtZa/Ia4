@@ -31,5 +31,3 @@ class GameMap:
             wall.draw(window)
         for trap in self.traps:
             trap.draw(window)
-
-

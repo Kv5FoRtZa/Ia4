@@ -25,7 +25,7 @@ def get_background(fundal):
             tiles.append(pos)
     return tiles,image
 
-def draw(window, background_tiles, bg_image, player, current_level, bullets, rd, enemy_b, nr_rd):
+def draw(window, background_tiles, bg_image, player, current_level, bullets, rd, enemy_b, nr_rd,game_map):
     # punem background 
     for tile in background_tiles:
         window.blit(bg_image, tile)
@@ -40,9 +40,9 @@ def draw(window, background_tiles, bg_image, player, current_level, bullets, rd,
         bullet.draw(window)
     for bullet in enemy_b:
         bullet.draw(window)
-    for i in range(1,nr_rd - 1):
+    for i in range(len(rd)):
         if (rd[i].hp > 0):
-            rd[i].draw(window)
+            rd[i].draw(window,game_map)
 
     # desenam playerul
     player.draw(window)

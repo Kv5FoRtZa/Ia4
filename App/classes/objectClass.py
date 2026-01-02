@@ -25,6 +25,8 @@ class Block(Object):
         block = get_block("beigeBrick.png", "Background", size)
         self.image.blit(block, (0, 0))
         self.mask = pygame.mask.from_surface(self.image)
+        self.x = x
+        self.y = y
 
 # --- CLASA TRAP (ȚEPI) ---
 class Trap(Object):
