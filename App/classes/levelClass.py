@@ -9,11 +9,11 @@ class Level:
     # state : locked / unlocked
     # win_status : 0 (nu a castigat) / 1 (a castigat)
     # map : harta nivelului
-    def __init__(self, name, state, win_status, map):
+    def __init__(self, name, state, win_status, game_map_obj):
         self._name = name
         self._state = state
         self._win_status = win_status
-        self._map = map
+        self._map = game_map_obj
 
     def getName(self):
         return self._name

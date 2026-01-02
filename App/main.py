@@ -11,14 +11,20 @@ from classes.playerClass import *
 from classes.objectClass import *
 from level_menu import levels_menu
 from classes.levelClass import *
+from classes.gameMapClass import GameMap
 from classes.bulletClass import *
 from classes.enemyClass import *
 from classes.overlapClass import *
+from utils.enemyLogicFunc import *
+from utils.gameLogicFunc import *
+
 pygame.init()
 pygame.font.init() # Inițializăm modulul de fonturi
 
 pygame.display.set_caption("PinkMan Adventure")
 window = pygame.display.set_mode((WIDTH, HEIGHT)) 
+
+# BIG TODO: de mutat toate metodele din main intr-un fisier ajutator
 
 def get_font(size): 
     return pygame.font.SysFont("comicsans", size)
@@ -26,11 +32,11 @@ def get_font(size):
 def main_menu(window):
     run = True
     clock = pygame.time.Clock()
-
+    
     while run:
         clock.tick(FPS)
         window.fill((94, 129, 162))
-
+        
         # 1. Titlul
         title_font = get_font(100)
         title_text = title_font.render("PINKMAN ADVENTURE", True, (255, 255, 255))
@@ -54,13 +60,73 @@ def main_menu(window):
                 if instruct_rect.collidepoint(mouse_pos):
                     run = False
 
-# TODO: in loc de 1, 2, 3 trebuie sa cream hartile nivelelor 
-def create_levels():
-    # Level("unlocked", 0, create_map(1))
-    # si in create_map(1) -- gameMap() --apelam constructorul clasei : propun sa se num gameMap
-    # 1 / 2 / 3 -- dificultatea nivelului (mai multe spike uri / trapuri etc)
-    levels = [Level("Level 1", "unlocked", 0, 1), Level("Level 2", "locked", 0, 2), Level("Level 3", "locked", 0, 3)]
-    return levels
+def play_game(window, current_level):
+    clock = pygame.time.Clock()
+    # harta jocului curent
+    game_map = current_level.getMap()
+
+    # Aici se declară toate tipurile de bg
+    background_tiles, bg_image = get_background("beigeTile.png")
+    player = Player(100, 100, 50, 50)
+
+    # bullets rd-ei si helperi pt ele
+    bullets = []
+    enemy_bullets = []
+    nr_rd = 5
+    rand_X = [10, 10, 10, 10, 10, 10, 10]
+    rd = create_rd(rand_X, nr_rd)
+    cnt_tras = 0
+
+    run=True
+    while run:
+        cnt_tras += 1
+        clock.tick(FPS)
+
+        # handles the shooting logic
+        handle_player_bullets_logic(bullets, player, rd, nr_rd)
+        handle_enemy_bullets_logic(enemy_bullets, player, rd)
+        handle_enemy_shooting(rd, enemy_bullets, cnt_tras, nr_rd, rand_X)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+                break
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_t:
+                    player.take_damage(10) # Scade 10 HP la fiecare apăsare
+            if event.type == pygame.MOUSEBUTTONUP:  # tragere de gloante ale player-ului
+                if player.direction == 'left':
+                    facing = -1
+                else:
+                    facing = 1
+                if len(bullets) < 16:
+                    bullets.append(bullet_class(round(player.rect.x + 25), round(player.rect.y + 25), 6, (0,0,0), facing,0)) 
+
+        # rulam frumos playerul si sa se miste frumos
+        player.loop(FPS, game_map.walls, game_map.traps)
+        handle_move(player)
+
+        # am facut o functie noua de draw in backgroundFunc -- am bagat rd-ei in ea
+        draw(window, background_tiles, bg_image, player, current_level, bullets, rd, enemy_bullets, nr_rd)
+
+        # desenam health bar
+        draw_health_bar(window, player)
+        
+        pygame.display.update()
+
+        # daca s a castigat -- marcam in nivel si ne intoarcem la meniu
+        if check_win_condition(rd, nr_rd) is True:
+            draw(window, background_tiles, bg_image, player, current_level, bullets, rd, enemy_bullets, nr_rd)
+            winning_message(window)
+            current_level.setWinStatus(1)
+            pygame.time.delay(3000)
+            run = False
+
+        if check_loss_condition(player) is True:
+            draw(window, background_tiles, bg_image, player, current_level, bullets, rd, enemy_bullets, nr_rd)
+            losing_message(window)
+            pygame.time.delay(3000)
+            run = False
 
 # Funcția care creează ecranul și rulează jocul
 def main(window):
@@ -70,81 +136,25 @@ def main(window):
     main_menu(window)
     # -----------------------------
 
-    # Levels array 
+    # Levels array and choosing a level
     levels = create_levels()
-    levels_menu(window, levels)
+    run = True
 
-    # Aici se declară toate tipurile de bg
-    background, bg_image = get_background("beigeTile.png")
-    player = Player(100, 100, 50, 50)
-    walls = [Block(0, HEIGHT-100, 100)]
-    traps = [Trap(200, 200, 50, 50)]
-    bullets = []
-    enemy_bullets = []
-    rd = []
-    nr_rd = 5
-    rand_X = [10, 10, 10, 10, 10, 10, 10]
-    x = random.randint(20,60)
-    y = random.randint(20,60)
-    copie = x
-    for i in range(1,nr_rd):
-        x += copie
-        y += x
-        nu_fi_identic = random.randint(30,50)
-        rand_X[i] = random.randint(10,30)
-        rd.append(enemy(x, y, 64, 64, 300 + 2 * x + nu_fi_identic))
-    start_time = time.time()
-    cnt_tras = 0
-    run=True
     while run:
-        cnt_tras += 1
-        clock.tick(FPS)
-        for bullet in bullets:
-            if bullet.facing == 1 or bullet.facing == -1:
-                if abs(bullet.x - player.rect.x) < 1000:
-                    bullet.x += 2 * bullet.vel
-                else:
-                    bullets.pop(bullets.index(bullet))  
-            for i in range(1,nr_rd - 1):
-                if overlap(rd[i].x + 32,rd[i].y + 32,64,bullet.x,bullet.y,bullet.radius):
-                    bullets.pop(bullets.index(bullet))
-                    rd[i].damage()
-        x = random.randint(10,30)
-        for bullet in enemy_bullets:
-            if bullet.facing == 1 or bullet.facing == -1:
-                if abs(bullet.x - rd[bullet.nr_inamic].x) < 1000:
-                    bullet.x += 2 * bullet.vel
-                else:
-                    enemy_bullets.pop(enemy_bullets.index(bullet))
-            if overlap(player.rect.x + 25,player.rect.y + 25,50,bullet.x,bullet.y,bullet.radius):
-                enemy_bullets.pop(enemy_bullets.index(bullet))
-                player.take_damage(10)
-        for i in range(1,nr_rd - 1):
-            if (cnt_tras) % int(rand_X[i]) == 0:
-                if rd[i].vel >= 0:
-                    enemy_bullets.append(bullet_class(round(rd[i].x + 25), round(rd[i].y + 25), 6, (255,0,0), 1,i)) 
-                else:
-                    enemy_bullets.append(bullet_class(round(rd[i].x + 25), round(rd[i].y + 25), 6, (255,0,0), -1,i)) 
+        # displaying the levels' menu and choosing to play a level
+        current_level = levels_menu(window, levels)
+
+        if current_level:
+            play_game(window, current_level)
+            if current_level.getWinStatus() == 1:
+                unlock_next_level(current_level, levels)
+        else:
+            run = False
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
                 break
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_t:
-                    player.take_damage(10) # Scade 10 HP la fiecare apăsare
-            if event.type == pygame.MOUSEBUTTONUP:
-                #print("ai tras")
-                if player.direction == 'left':
-                    facing = -1
-                else:
-                    facing = 1
-                if len(bullets) < 16:
-                    bullets.append(bullet_class(round(player.rect.x + 25), round(player.rect.y + 25), 6, (0,0,0), facing,0)) 
-        player.loop(FPS, walls,traps)
-        handle_move(player)
-        draw(window, background, bg_image, player, walls+traps,bullets,rd,enemy_bullets,nr_rd)
-        draw_health_bar(window, player)
-        pygame.display.update()
 
     pygame.quit()
     sys.exit() # Folosim sys.exit() pentru a închide curat
