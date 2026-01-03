@@ -83,10 +83,25 @@ def create_levels():
     ]
     map3 = GameMap(layout3, tile_size=100)
 
+    layout4 = [
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    ]
+    map4 = GameMap(layout4, tile_size=100)
+
     levels = [
         Level("Level 1", "unlocked", 0, map1),
         Level("Level 2", "locked", 0, map2),
-        Level("Level 3", "locked", 0, map3)
+        Level("Level 3", "locked", 0, map3),
+        Level("Bo$$ Level", "locked", 0, map4)
     ]
     return levels
 
@@ -115,7 +130,7 @@ def check_win_condition(rd, nr_rd):
     if not rd:
         return True
     
-    for i in range(1, nr_rd - 1):
+    for i in range(len(rd)):
         if (rd[i].hp > 0):
             return False
     return True
@@ -131,5 +146,5 @@ def unlock_next_level(won_level, levels):
     if won_level.getName() == "Level 2":
         levels[2].setState("unlocked")
     # dam create la boss level
-    #if won_level.getName == "Level 3":
-        #create_boss_level()
+    if won_level.getName() == "Level 3":
+        levels[3].setState("unlocked")

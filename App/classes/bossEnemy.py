@@ -8,7 +8,7 @@ from os.path import isfile,join
 from classes.bulletClass import *
 from classes.overlapClass import *
 
-class enemy(object):
+class boss(object):
     walk = [pygame.image.load(join("assets","MainCharacters","RD","RD.png"))]
     
     def __init__(self, x, y, width, height, end):
@@ -19,16 +19,16 @@ class enemy(object):
         self.path = [x, end]
         self.walkCount = 0
         self.vel = 3
-        self.hp = 2
-    def draw(self, win,game_map):
-        self.move(game_map)
+        self.hp = 20
+    def draw(self, win,walls):
+        self.move(walls)
         win.blit((self.walk[0]), (self.x,self.y))
-    def move(self,game_map):
+    def move(self,walls):
         if self.vel > 0:
             if self.x < self.path[1] + self.vel:
                 vf = 0
-                for i in range(len(game_map.walls)):
-                     if square_square_overlap(game_map.walls[i].x + 50,game_map.walls[i].y + 50,100,self.x + 32,self.y + 32,64):
+                for i in range(len(walls)):
+                     if square_square_overlap(walls[i].x + 50,walls[i].y + 50,100,self.x + 32,self.y + 32,64):
                          vf = 1
                          break
                 if vf == 0:
@@ -44,8 +44,8 @@ class enemy(object):
         else:
             if self.x > self.path[0] - self.vel:
                 vf = 0
-                for i in range(len(game_map.walls)):
-                     if square_square_overlap(game_map.walls[i].x + 50,game_map.walls[i].y + 50,100,self.x + 32,self.y + 32,64):
+                for i in range(len(walls)):
+                     if square_square_overlap(walls[i].x + 50,walls[i].y + 50,100,self.x + 32,self.y + 32,64):
                          vf = 1
                          break
                 if vf == 0:
@@ -58,10 +58,6 @@ class enemy(object):
                 self.vel = self.vel * -1
                 self.x += self.vel
                 self.walkCount = 0
-    def fire(self,facing):
-        bullets = []
-        if len(bullets) < 4:
-             bullets.append(bullet_class(round(self.x + 25), round(self.y + 25), 6, (255,0,0), facing,0)) 
     def damage(self):
         self.hp -= 1
         if self.hp == 0:

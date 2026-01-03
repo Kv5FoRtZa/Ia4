@@ -72,8 +72,11 @@ def play_game(window, current_level):
     # bullets rd-ei si helperi pt ele
     bullets = []
     enemy_bullets = []
+    boss_bullets = []
+    split_bullets = []
     nr_rd = 5
     rand_X = [10, 10, 10, 10, 10, 10, 10]
+    rnd = 10
     rd = create_rd(rand_X, nr_rd,game_map)
     cnt_tras = 0
 
@@ -86,7 +89,11 @@ def play_game(window, current_level):
         handle_player_bullets_logic(bullets, player, rd, nr_rd,game_map)
         handle_enemy_bullets_logic(enemy_bullets, player, rd,game_map)
         handle_enemy_shooting(rd, enemy_bullets, cnt_tras, nr_rd, rand_X)
-
+        if game_map.bosss:
+            hanle_boss_shooting(boss_bullets, cnt_tras,rnd,game_map.bosss[0],player)
+            handle_boss_bullets_logic(boss_bullets,player,game_map.bosss[0],game_map,split_bullets)
+        if len(split_bullets) != 0:
+            handle_split_bullets_logic(split_bullets,player,game_map)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -100,14 +107,14 @@ def play_game(window, current_level):
                 else:
                     facing = 1
                 if len(bullets) < 16:
-                    bullets.append(bullet_class(round(player.rect.x + 25), round(player.rect.y + 25), 6, (0,0,0), facing,0)) 
+                    bullets.append(bullet_class(round(player.rect.x + 25), round(player.rect.y + 25), 6, (0,0,0), facing,0,0)) 
 
         # rulam frumos playerul si sa se miste frumos
         player.loop(FPS, game_map.walls, game_map.traps)
         handle_move(player)
 
         # am facut o functie noua de draw in backgroundFunc -- am bagat rd-ei in ea
-        draw(window, background_tiles, bg_image, player, current_level, bullets, rd, enemy_bullets, nr_rd,game_map)
+        draw(window, background_tiles, bg_image, player, current_level, bullets, rd, enemy_bullets, nr_rd,game_map,boss_bullets,split_bullets)
 
         # desenam health bar
         draw_health_bar(window, player)
@@ -116,14 +123,14 @@ def play_game(window, current_level):
 
         # daca s a castigat -- marcam in nivel si ne intoarcem la meniu
         if check_win_condition(rd, nr_rd) is True:
-            draw(window, background_tiles, bg_image, player, current_level, bullets, rd, enemy_bullets, nr_rd,game_map)
+            draw(window, background_tiles, bg_image, player, current_level, bullets, rd, enemy_bullets, nr_rd,game_map,boss_bullets,split_bullets)
             winning_message(window)
             current_level.setWinStatus(1)
             pygame.time.delay(3000)
             run = False
 
         if check_loss_condition(player) is True:
-            draw(window, background_tiles, bg_image, player, current_level, bullets, rd, enemy_bullets, nr_rd,game_map)
+            draw(window, background_tiles, bg_image, player, current_level, bullets, rd, enemy_bullets, nr_rd,game_map,boss_bullets,split_bullets)
             losing_message(window)
             pygame.time.delay(3000)
             run = False

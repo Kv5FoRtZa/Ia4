@@ -68,6 +68,7 @@ def levels_menu(window, levels):
         button1 = draw_button(window, levels[0], levels[0].getName(), WIDTH / 2 - 100, 320, 200, 60)
         button2 = draw_button(window, levels[1], "Level 2", WIDTH / 2 - 100, 420, 200, 60)
         button3 = draw_button(window, levels[2], "Level 3", WIDTH / 2 - 100, 520, 200, 60)
+        button4 = draw_button(window, levels[3], "Bo$$ Level", WIDTH / 2 - 100, 620, 200, 60)
 
         pygame.display.update()
 
@@ -99,10 +100,15 @@ def levels_menu(window, levels):
                     else:
                         chosen_level = levels[2]
                         run = False
-    
+                elif button4.collidepoint(mouse_pos):
+                    if (levels[3].getState() == "locked"):
+                        print("Level 3 is locked") # message on screen that level is locked
+                    else:
+                        chosen_level = levels[3]
+                        run = False
     return chosen_level
 
 if __name__ == "__main__":
-    levels = [Level("unlocked", 1), Level("locked", 2), Level("locked", 3)]
+    levels = [Level("unlocked", 1), Level("locked", 2), Level("locked", 3), Level("locked", 4)]
     levels_menu(window, levels)
         
