@@ -9,7 +9,7 @@ from classes.bulletClass import *
 from classes.overlapClass import *
 
 class boss(object):
-    walk = [pygame.image.load(join("assets","MainCharacters","RD","RD.png"))]
+    walk = [pygame.image.load(join("assets","MainCharacters","RD","UPB.png"))]
     
     def __init__(self, x, y, width, height, end):
         self.x = x
@@ -28,7 +28,7 @@ class boss(object):
             if self.x < self.path[1] + self.vel:
                 vf = 0
                 for i in range(len(walls)):
-                     if square_square_overlap(walls[i].x + 50,walls[i].y + 50,100,self.x + 32,self.y + 32,64):
+                     if square_square_overlap(walls[i].x + 50,walls[i].y + 50,100,self.x + self.height / 2,self.y + self.width / 2,self.height):
                          vf = 1
                          break
                 if vf == 0:
@@ -45,7 +45,7 @@ class boss(object):
             if self.x > self.path[0] - self.vel:
                 vf = 0
                 for i in range(len(walls)):
-                     if square_square_overlap(walls[i].x + 50,walls[i].y + 50,100,self.x + 32,self.y + 32,64):
+                     if square_square_overlap(walls[i].x + 50,walls[i].y + 50,100,self.x + self.height / 2,self.y + self.width / 2,self.height):
                          vf = 1
                          break
                 if vf == 0:

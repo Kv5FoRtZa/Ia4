@@ -150,10 +150,6 @@ class Player(pygame.sprite.Sprite):
                 # De exemplu: ne aruncă puțin în sus
                 # self.y_vel = -10
     
-
-
-
-
 def handle_move(player):
     keys = pygame.key.get_pressed()
     player.x_vel=0

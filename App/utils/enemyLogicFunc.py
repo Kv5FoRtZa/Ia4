@@ -19,7 +19,7 @@ def handle_player_bullets_logic(bullets, player, rd, nr_rd,game_map):
                     rd[i].damage()
                     vf = 1
             if game_map.bosss:
-                if overlap(game_map.bosss[0].x + 32,game_map.bosss[0].y + 32,64,bullet.x,bullet.y,bullet.radius):
+                if overlap(game_map.bosss[0].x + game_map.bosss[0].height / 2,game_map.bosss[0].y + game_map.bosss[0].width / 2,game_map.bosss[0].height,bullet.x,bullet.y,bullet.radius):
                     bullets.pop(bullets.index(bullet))
                     game_map.bosss[0].damage()
                     vf = 1
