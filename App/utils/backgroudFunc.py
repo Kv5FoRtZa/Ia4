@@ -53,28 +53,28 @@ def draw(window, background_tiles, bg_image, player, current_level, bullets, ene
     player.draw(window)
 
 def draw_health_bar(window, player):
-    # Configurare bara
+    # configurare bara
     bar_width = 200
     bar_height = 20
-    x_pos = 20  # Distanța de la stânga ecranului
-    y_pos = 20  # Distanța de sus
+    x_pos = 20  # distanta de la stanga ecranului
+    y_pos = 20  # Distanta de sus
     
-    # Calculăm cât din bară trebuie să fie verde (procentaj)
-    # Formula: (HP curent / HP maxim) * Lățime totală
+    # calc cat din bara trebuie sa fie verde (procentaj)
+    # Formula: (HP curent / HP maxim) * latime totala
     ratio = player.hp / player.max_hp
     fill_width = ratio * bar_width
     
-    # Dreptunghiul de fundal (Roșu - arată cât damage ai luat)
+    # Dreptunghiul de fundal (Rosu - arata cat damage ai luat)
     border_rect = pygame.Rect(x_pos, y_pos, bar_width, bar_height)
     
-    # Dreptunghiul de viață (Verde - arată câtă viață mai ai)
+    # Dreptunghiul de viata (Verde - arata cata viata mai ai)
     fill_rect = pygame.Rect(x_pos, y_pos, fill_width, bar_height)
     
-    # Desenăm dreptunghiurile
+    # Desenam dreptunghiurile
     pygame.draw.rect(window, (255, 0, 0), border_rect) # Fundal Roșu
-    pygame.draw.rect(window, (0, 255, 0), fill_rect)   # Viață Verde
+    pygame.draw.rect(window, (0, 255, 0), fill_rect)   # Viata Verde
     
-    # Opțional: Un contur alb pentru aspect mai plăcut
+    # contur alb
     pygame.draw.rect(window, (255, 255, 255), border_rect, 2)
 
 def draw_boss_bar(window, boss):

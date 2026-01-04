@@ -21,32 +21,31 @@ class Object(pygame.sprite.Sprite):
 class Block(Object):
     def __init__(self, x, y, size):
         super().__init__(x, y, size, size)
-        # Specificăm folderul "Background" pentru blocuri
+        # Specificam folderul "Background" pentru blocuri
         block = get_block("beigeBrick.png", "Background", size)
         self.image.blit(block, (0, 0))
         self.mask = pygame.mask.from_surface(self.image)
         self.x = x
         self.y = y
 
-# --- CLASA TRAP (ȚEPI) ---
+# clasa trap (tepi)
 class Trap(Object):
     def __init__(self, x, y, width, height):
         super().__init__(x, y, width, height, "spike")
-        # Specificăm folderul "Tiles" pentru țepi
+        # Specificam folderul "Tiles" pentru tepi
         trap = get_block("spikes.png", "Tiles", width)
         self.image.blit(trap, (0, 0))
         self.mask = pygame.mask.from_surface(self.image)
 
-# --- FUNCȚIA GET_BLOCK ACTUALIZATĂ ---
-# Am adăugat parametrul 'directory' care implicit e "Background"
+# fct get_block
 def get_block(img_name, directory="Background", size=100, x_start_img=0, y_start_img=0):
-    # Acum construim calea folosind directorul specificat
+    # construim calea folosind directorul specificat
     path = join("assets", directory, img_name)
     
     if not isfile(path):
         print(f"[EROARE] Nu am găsit imaginea: {path}")
         surface = pygame.Surface((size, size))
-        surface.fill((255, 0, 0)) # Pătrat roșu de siguranță
+        surface.fill((255, 0, 0)) # patrat rosu for safety
         return surface
 
     image = pygame.image.load(path).convert_alpha()

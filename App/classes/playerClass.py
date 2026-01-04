@@ -62,22 +62,22 @@ class Player(pygame.sprite.Sprite):
         self.update_sprite() 
         self.update_mask()
     def move(self, dx, dy, objects):
-            # 1. Mișcare pe axa X
+            # miscare pe axa X
             self.rect.x += dx
             self.update_mask()
             for obj in objects:
                 if pygame.sprite.collide_mask(self, obj):
-                    # Mergem DREAPTA -> Lovim un perete aflat în dreapta noastră
+                    # Mergem DREAPTA -> Lovim un perete aflat in dreapta noastra
                     if dx > 0 and obj.rect.left >= self.rect.left:
                         self.rect.x -= dx
                 
-                    # Mergem STÂNGA -> Lovim un perete aflat în stânga noastră
+                    # Mergem STANGA -> Lovim un perete aflat in stânga noastra
                     elif dx < 0 and obj.rect.right <= self.rect.right:
                         self.rect.x -= dx
                 
                     self.update_mask()
 
-            # 2. Mișcare pe axa Y
+            # Miscare pe axa Y
             self.rect.y += dy
             self.update_mask()
             for obj in objects:
@@ -86,7 +86,7 @@ class Player(pygame.sprite.Sprite):
                     if dy > 0 and obj.rect.top >= self.rect.top:
                         self.rect.y -= dy
 
-                    # Mergem SUS -> Lovim un perete aflat DEASUPRA noastră
+                    # Mergem SUS -> Lovim un perete aflat DEASUPRA noastra
                     elif dy < 0 and obj.rect.bottom <= self.rect.bottom:
                         self.rect.y -= dy
 
@@ -112,7 +112,7 @@ class Player(pygame.sprite.Sprite):
     #muta caracterul frame by frame
     def loop(self, fps, walls,traps):
         self.update_sprite()
-        # Ne asigurăm că avem o mască validă imediat după schimbarea sprite-ului
+        # Ne asiguram că avem o masca valida imediat dupa schimbarea sprite-ului
         self.update_mask()
         self.move(self.x_vel, self.y_vel, walls)
         self.check_traps(traps)
@@ -132,7 +132,7 @@ class Player(pygame.sprite.Sprite):
         self.sprite = sprites[sprite_index]
         self.animation_count +=1
     def update_mask(self):
-        # Creează o mască din imaginea curentă a sprite-ului
+        # Creeaza o masca din imaginea curenta a sprite-ului
         self.mask = pygame.mask.from_surface(self.sprite)
 
     def draw(self,window):
@@ -146,9 +146,6 @@ class Player(pygame.sprite.Sprite):
         for trap in traps:
             if pygame.sprite.collide_mask(self, trap):
                 self.take_damage(1)
-                # Aici poți adăuga knockback ușor, pentru că ești deja în clasă
-                # De exemplu: ne aruncă puțin în sus
-                # self.y_vel = -10
     
 def handle_move(player):
     keys = pygame.key.get_pressed()

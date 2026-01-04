@@ -78,7 +78,7 @@ def play_game(window, current_level):
     boss_bullets = []
     split_bullets = []
     nr_rd = 5
-    rand_X = [10, 10, 10, 10, 10, 10, 10]
+    rand_X = [10 for _ in range(len(game_map.inamic))]
     rnd = 10
     #rd = create_rd(rand_X, nr_rd,game_map)
     cnt_tras = 0
@@ -130,6 +130,10 @@ def play_game(window, current_level):
         if check_win_condition(game_map) is True:
             draw(window, background_tiles, bg_image, player, current_level, bullets, enemy_bullets,game_map,boss_bullets,split_bullets)
             winning_message(window)
+            # should help with the messages who are not always being displayed
+            pygame.display.flip() 
+            pygame.event.pump()
+
             current_level.setWinStatus(1)
             reset_map(game_map)
             pygame.time.delay(3000)
@@ -138,17 +142,20 @@ def play_game(window, current_level):
         if check_loss_condition(player) is True:
             draw(window, background_tiles, bg_image, player, current_level, bullets, enemy_bullets,game_map,boss_bullets,split_bullets)
             losing_message(window)
+
+            pygame.display.flip() 
+            pygame.event.pump()
+
             reset_map(game_map)
             pygame.time.delay(3000)
             run = False
 
-# Funcția care creează ecranul și rulează jocul
+# main function -- rulam jocul
 def main(window):
     clock = pygame.time.Clock()
     
-    # --- PASUL 1: RULĂM MENIUL ---
+    # rulam meniul
     main_menu(window)
-    # -----------------------------
 
     # Levels array and choosing a level
     levels = create_levels()
@@ -171,7 +178,7 @@ def main(window):
                 break
 
     pygame.quit()
-    sys.exit() # Folosim sys.exit() pentru a închide curat
+    sys.exit()
 
 if __name__ == "__main__":
     main(window)
