@@ -69,11 +69,11 @@ class Player(pygame.sprite.Sprite):
                 if pygame.sprite.collide_mask(self, obj):
                     # Mergem DREAPTA -> Lovim un perete aflat în dreapta noastră
                     if dx > 0 and obj.rect.left >= self.rect.left:
-                        self.rect.right = obj.rect.left
+                        self.rect.x -= dx
                 
                     # Mergem STÂNGA -> Lovim un perete aflat în stânga noastră
                     elif dx < 0 and obj.rect.right <= self.rect.right:
-                        self.rect.left = obj.rect.right
+                        self.rect.x -= dx
                 
                     self.update_mask()
 
@@ -84,11 +84,11 @@ class Player(pygame.sprite.Sprite):
                 if pygame.sprite.collide_mask(self, obj):
                     # Mergem JOS -> Lovim un perete aflat SUB noi
                     if dy > 0 and obj.rect.top >= self.rect.top:
-                        self.rect.bottom = obj.rect.top
+                        self.rect.y -= dy
 
                     # Mergem SUS -> Lovim un perete aflat DEASUPRA noastră
                     elif dy < 0 and obj.rect.bottom <= self.rect.bottom:
-                        self.rect.top = obj.rect.bottom
+                        self.rect.y -= dy
 
                     self.update_mask()
     

@@ -16,12 +16,14 @@ from classes.bulletClass import *
 from classes.enemyClass import *
 from classes.overlapClass import *
 from utils.enemyLogicFunc import *
+from utils.bossLogicFunc import *
 from utils.gameLogicFunc import *
+from classes.resetEnemy import *
 
 pygame.init()
 pygame.font.init() # Inițializăm modulul de fonturi
 
-pygame.display.set_caption("PinkMan Adventure")
+pygame.display.set_caption("EVO HUNTER")
 window = pygame.display.set_mode((WIDTH, HEIGHT)) 
 
 # BIG TODO: de mutat toate metodele din main intr-un fisier ajutator
@@ -39,7 +41,7 @@ def main_menu(window):
         
         # 1. Titlul
         title_font = get_font(100)
-        title_text = title_font.render("PINKMAN ADVENTURE", True, (255, 255, 255))
+        title_text = title_font.render("EVO HUNTER", True, (255, 255, 255))
         title_rect = title_text.get_rect(center=(WIDTH/2, 200))
         window.blit(title_text, title_rect)
 
@@ -64,10 +66,11 @@ def play_game(window, current_level):
     clock = pygame.time.Clock()
     # harta jocului curent
     game_map = current_level.getMap()
+    #save = current_level.getMap()
 
     # Aici se declară toate tipurile de bg
     background_tiles, bg_image = get_background("beigeTile.png")
-    player = Player(100, 100, 50, 50)
+    player = Player(100, 100, 32, 32)
 
     # bullets rd-ei si helperi pt ele
     bullets = []
@@ -77,7 +80,7 @@ def play_game(window, current_level):
     nr_rd = 5
     rand_X = [10, 10, 10, 10, 10, 10, 10]
     rnd = 10
-    rd = create_rd(rand_X, nr_rd,game_map)
+    #rd = create_rd(rand_X, nr_rd,game_map)
     cnt_tras = 0
 
     run=True
@@ -86,9 +89,9 @@ def play_game(window, current_level):
         clock.tick(FPS)
 
         # handles the shooting logic
-        handle_player_bullets_logic(bullets, player, rd, nr_rd,game_map)
-        handle_enemy_bullets_logic(enemy_bullets, player, rd,game_map)
-        handle_enemy_shooting(rd, enemy_bullets, cnt_tras, nr_rd, rand_X)
+        handle_player_bullets_logic(bullets, player,game_map)
+        handle_enemy_bullets_logic(enemy_bullets, player,game_map)
+        handle_enemy_shooting(game_map,enemy_bullets, cnt_tras, rand_X)
         if game_map.bosss:
             hanle_boss_shooting(boss_bullets, cnt_tras,rnd,game_map.bosss[0],player)
             handle_boss_bullets_logic(boss_bullets,player,game_map.bosss[0],game_map,split_bullets)
@@ -113,25 +116,29 @@ def play_game(window, current_level):
         player.loop(FPS, game_map.walls, game_map.traps)
         handle_move(player)
 
-        # am facut o functie noua de draw in backgroundFunc -- am bagat rd-ei in ea
-        draw(window, background_tiles, bg_image, player, current_level, bullets, rd, enemy_bullets, nr_rd,game_map,boss_bullets,split_bullets)
+        # am facut o functie noua de draw in backgroundFunc
+        draw(window, background_tiles, bg_image, player, current_level, bullets, enemy_bullets,game_map,boss_bullets,split_bullets)
 
         # desenam health bar
         draw_health_bar(window, player)
-        
+        if game_map.bosss:
+            draw_boss_bar(window,game_map.bosss[0])
+
         pygame.display.update()
 
         # daca s a castigat -- marcam in nivel si ne intoarcem la meniu
-        if check_win_condition(rd, nr_rd) is True:
-            draw(window, background_tiles, bg_image, player, current_level, bullets, rd, enemy_bullets, nr_rd,game_map,boss_bullets,split_bullets)
+        if check_win_condition(game_map) is True:
+            draw(window, background_tiles, bg_image, player, current_level, bullets, enemy_bullets,game_map,boss_bullets,split_bullets)
             winning_message(window)
             current_level.setWinStatus(1)
+            reset_map(game_map)
             pygame.time.delay(3000)
             run = False
 
         if check_loss_condition(player) is True:
-            draw(window, background_tiles, bg_image, player, current_level, bullets, rd, enemy_bullets, nr_rd,game_map,boss_bullets,split_bullets)
+            draw(window, background_tiles, bg_image, player, current_level, bullets, enemy_bullets,game_map,boss_bullets,split_bullets)
             losing_message(window)
+            reset_map(game_map)
             pygame.time.delay(3000)
             run = False
 

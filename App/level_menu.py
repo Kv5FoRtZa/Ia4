@@ -111,4 +111,4 @@ def levels_menu(window, levels):
 if __name__ == "__main__":
     levels = [Level("unlocked", 1), Level("locked", 2), Level("locked", 3), Level("locked", 4)]
     levels_menu(window, levels)
-        
+    

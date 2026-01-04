@@ -20,6 +20,8 @@ class enemy(object):
         self.walkCount = 0
         self.vel = 3
         self.hp = 2
+        self.initialx = x
+        self.initialy = y
     def draw(self, win,game_map):
         self.move(game_map)
         win.blit((self.walk[0]), (self.x,self.y))
@@ -28,7 +30,7 @@ class enemy(object):
             if self.x < self.path[1] + self.vel:
                 vf = 0
                 for i in range(len(game_map.walls)):
-                     if square_square_overlap(game_map.walls[i].x + 50,game_map.walls[i].y + 50,100,self.x + 32,self.y + 32,64):
+                     if square_square_overlap(game_map.walls[i].x + 25,game_map.walls[i].y + 25,50,self.x + 32,self.y + 32,64):
                          vf = 1
                          break
                 if vf == 0:
@@ -45,7 +47,7 @@ class enemy(object):
             if self.x > self.path[0] - self.vel:
                 vf = 0
                 for i in range(len(game_map.walls)):
-                     if square_square_overlap(game_map.walls[i].x + 50,game_map.walls[i].y + 50,100,self.x + 32,self.y + 32,64):
+                     if square_square_overlap(game_map.walls[i].x + 25,game_map.walls[i].y + 25,50,self.x + 32,self.y + 32,64):
                          vf = 1
                          break
                 if vf == 0:
@@ -67,3 +69,7 @@ class enemy(object):
         if self.hp == 0:
             self.x = -1000
             self.y = -1000
+    def exit(self):
+        self.hp = 20
+        self.x = self.initialx
+        self.y = self.initialy

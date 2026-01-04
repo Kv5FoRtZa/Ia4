@@ -1,7 +1,7 @@
 import pygame
 from classes.objectClass import Block, Trap
 from classes.bossEnemy import boss
-
+from classes.enemyClass import enemy
 class GameMap:
     def __init__(self, layout, tile_size):
         self.layout = layout
@@ -9,12 +9,14 @@ class GameMap:
         self.walls = []
         self.traps = []
         self.bosss = []
+        self.inamic = []
         self.create_map_objects()
 
     def create_map_objects(self):
         self.walls = []
         self.traps = []
         self.bosss = []
+        self.inamic = []
 
         # enumerate() -- loops through a list/ tuple/ etc -- you have acces to both the index and the element itself
         for row_idx, row in enumerate(self.layout):
@@ -28,7 +30,9 @@ class GameMap:
                 elif tile == -1:
                     self.traps.append(Trap(x, y, self.tile_size, self.tile_size))
                 elif tile == 6:
-                    self.bosss.append(boss(x, y, 300,300,300 + 2 * x))
+                    self.bosss.append(boss(x, y, 180,265,300 + 2 * x))
+                elif tile == 3:
+                    self.inamic.append(enemy(x, y, 64, 64, 300 + 2 * x))
                 # alte elemente cand avem
 
     def draw(self, window):
