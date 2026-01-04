@@ -70,6 +70,6 @@ class enemy(object):
             self.x = -1000
             self.y = -1000
     def exit(self):
-        self.hp = 20
+        self.hp = 2
         self.x = self.initialx
         self.y = self.initialy
