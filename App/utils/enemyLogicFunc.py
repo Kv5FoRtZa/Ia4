@@ -17,7 +17,7 @@ def handle_player_bullets_logic(bullets, player,game_map):
                     bullets.pop(bullets.index(bullet))  
             
             for i in range(len(game_map.inamic)):
-                if overlap(game_map.inamic[i].x + 32,game_map.inamic[i].y + 32,64,bullet.x,bullet.y,bullet.radius) and vf == 0:
+                if overlap(game_map.inamic[i].x + 25,game_map.inamic[i].y + 25,50,bullet.x,bullet.y,bullet.radius) and vf == 0:
                     bullets.pop(bullets.index(bullet))
                     game_map.inamic[i].damage()
                     vf = 1

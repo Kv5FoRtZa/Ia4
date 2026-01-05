@@ -32,7 +32,7 @@ class GameMap:
                 elif tile == 6:
                     self.bosss.append(boss(x, y, 180,265,300 + 2 * x))
                 elif tile == 3:
-                    self.inamic.append(enemy(x, y, 64, 64, 300 + 2 * x))
+                    self.inamic.append(enemy(x, y, 49, 49, 300 + 2 * x))
                 # alte elemente cand avem
 
     def draw(self, window):
