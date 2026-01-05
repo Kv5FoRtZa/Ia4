@@ -48,7 +48,7 @@ class Player(pygame.sprite.Sprite):
 
     COLOR=LIGHT_BLUE
     ANIMATION_DELAY=5
-    SPRITES=load_sprite_sheets("MainCharacters","PinkMan",32,32,True)
+    SPRITES=load_sprite_sheets("MainCharacters","PinkMan",25,25,True)
     def __init__(self,x,y,width,height):
         super().__init__()
         self.rect = pygame.Rect(x,y,width,height)
