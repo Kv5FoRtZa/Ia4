@@ -2,7 +2,7 @@ import pygame
 import time
 import sys
 from classes.levelClass import *
-from utils.global_variables import WIDTH, HEIGHT, LIGHT_BLUE, WHITE, BLACK, DARK_GRAY, GRAY, FPS
+from utils.global_variables import WIDTH, HEIGHT, LIGHT_BLUE, WHITE, BLACK, DARK_GRAY, GRAY, RED, FPS
 
 # de facut o clasa levels:
     # starea_nivelului : locked / unlocked
@@ -50,9 +50,44 @@ def draw_button(window, level, text, x, y, width, height):
 
     return button_rect
 
+def draw_level_locked_message(window, level):
+    name = level.getName()
+    
+    # facem cu overlay ca nu imi place cum arata ce am mai incercat
+    msg_width, msg_height = 400, 150
+    overlay = pygame.Surface((msg_width, msg_height), pygame.SRCALPHA)
+    
+    # dreptunghi transparent
+    pygame.draw.rect(overlay, (0, 0, 0, 200), (0, 0, msg_width, msg_height), border_radius=20)
+    
+    # contur
+    pygame.draw.rect(overlay, (255, 0, 0), (0, 0, msg_width, msg_height), 3, border_radius=20)
+
+    # font
+    font_big = get_font(40)
+    font_small = get_font(25)
+    
+    # text surface
+    title_surf = font_big.render("LEVEL LOCKED", True, RED)
+    text_surf = font_small.render(f"Complete previous levels to play {name}", True, WHITE)
+    
+    # text rect
+    title_rect = title_surf.get_rect(center=(msg_width // 2, 50))
+    text_rect = text_surf.get_rect(center=(msg_width // 2, 100))
+    
+    # desenam le overlay pe centru
+    overlay.blit(title_surf, title_rect)
+    overlay.blit(text_surf, text_rect)
+    
+    screen_rect = overlay.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+    window.blit(overlay, screen_rect)
+
 def levels_menu(window, levels):
     run = True
     clock = pygame.time.Clock()
+
+    level_with_locked_message = None
+    show_message_until = 0
 
     while run:
         clock.tick(FPS)
@@ -68,7 +103,16 @@ def levels_menu(window, levels):
         button1 = draw_button(window, levels[0], levels[0].getName(), WIDTH / 2 - 100, 320, 200, 60)
         button2 = draw_button(window, levels[1], "Level 2", WIDTH / 2 - 100, 420, 200, 60)
         button3 = draw_button(window, levels[2], "Level 3", WIDTH / 2 - 100, 520, 200, 60)
-        button4 = draw_button(window, levels[3], "Bo$$ Level", WIDTH / 2 - 100, 620, 200, 60)
+        button4 = draw_button(window, levels[3], "Level 4", WIDTH / 2 - 100, 620, 200, 60)
+        button5 = draw_button(window, levels[4], "Bo$$ Level", WIDTH / 2 - 100, 720, 200, 60)
+
+        # draws the locked message until said time
+        current_time = pygame.time.get_ticks()
+        if level_with_locked_message and current_time < show_message_until:
+            draw_level_locked_message(window, level_with_locked_message)
+        else:
+            level_with_locked_message = None
+
 
         pygame.display.update()
 
@@ -80,7 +124,8 @@ def levels_menu(window, levels):
                 mouse_pos = event.pos
                 if button1.collidepoint(mouse_pos):
                     if (levels[0].getState() == "locked"):
-                        print("Level 1 is locked") # message on screen that level is locked
+                        level_with_locked_message = levels[0]
+                        show_message_until = pygame.time.get_ticks() + 2000
                     else:
                         chosen_level = levels[0]
                         run = False
@@ -89,22 +134,34 @@ def levels_menu(window, levels):
                     # ar trebui apelata functia de harta cand se scrie clasa de levels
                 elif button2.collidepoint(mouse_pos):
                     if (levels[1].getState() == "locked"):
-                        print("Level 2 is locked") # message on screen that level is locked
+                        level_with_locked_message = levels[1]
+                        show_message_until = pygame.time.get_ticks() + 2000
                     else:
                         chosen_level = levels[1]
                         run = False
 
                 elif button3.collidepoint(mouse_pos):
                     if (levels[2].getState() == "locked"):
-                        print("Level 3 is locked") # message on screen that level is locked
+                        level_with_locked_message = levels[2]
+                        show_message_until = pygame.time.get_ticks() + 2000
                     else:
                         chosen_level = levels[2]
                         run = False
+
                 elif button4.collidepoint(mouse_pos):
                     if (levels[3].getState() == "locked"):
-                        print("Level 3 is locked") # message on screen that level is locked
+                        level_with_locked_message = levels[3]
+                        show_message_until = pygame.time.get_ticks() + 2000
                     else:
                         chosen_level = levels[3]
+                        run = False
+
+                elif button5.collidepoint(mouse_pos):
+                    if (levels[4].getState() == "locked"):
+                        level_with_locked_message = levels[4]
+                        show_message_until = pygame.time.get_ticks() + 2000
+                    else:
+                        chosen_level = levels[4]
                         run = False
     return chosen_level
 

@@ -42,16 +42,34 @@ def main_menu(window):
         # 1. Titlul
         title_font = get_font(100)
         title_text = title_font.render("EVO HUNTER", True, (255, 255, 255))
+        font = pygame.font.SysFont('Comic Sans MS', 30)
+        font2 = pygame.font.SysFont('Comic Sans MS', 70)
+        text1 = font.render("Bine ai venit!", False, (200, 200, 200))
+        text2 = font.render("In acest joc trebuie sa vanezi goblini mov evil!", False, (200, 200, 200))
+        text3 = font.render("Esti singurul care ii poate opri!", False, (200, 200, 200))
+        text1_rect = title_text.get_rect(center=(WIDTH/2, 300))
+        text2_rect = title_text.get_rect(center=(WIDTH/2, 330))
+        text3_rect = title_text.get_rect(center=(WIDTH/2, 360))
         title_rect = title_text.get_rect(center=(WIDTH/2, 200))
+        window.blit(text1, text1_rect)
+        window.blit(text2, text2_rect)
+        window.blit(text3, text3_rect)
         window.blit(title_text, title_rect)
 
-        instruct_font = get_font(50)
+        instruct_font = get_font(90)
         instruct_text = instruct_font.render("Click to Play", True, (200, 200, 200))
         instruct_rect = instruct_text.get_rect(center=(WIDTH/2, HEIGHT/2))
         window.blit(instruct_text, instruct_rect)
-
+        Inst = font2.render("Instructiuni:", False, (200, 200, 200))
+        i1 = font.render("Mers pe wasd sau pe sageti", False, (200, 200, 200))
+        i2 = font.render("Pentru a impusca apasa click", False, (200, 200, 200))
+        Inst_rect = Inst.get_rect(center=(WIDTH/2, 2 * HEIGHT/3))
+        I1_rect = Inst.get_rect(center=(WIDTH/2, 2 * HEIGHT/3 + 50))
+        I2_rect = Inst.get_rect(center=(WIDTH/2, 2 * HEIGHT/3 + 75))
+        window.blit(Inst, Inst_rect)
+        window.blit(i1, I1_rect)
+        window.blit(i2, I2_rect)
         pygame.display.update()
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -78,7 +96,7 @@ def play_game(window, current_level):
     boss_bullets = []
     split_bullets = []
     nr_rd = 5
-    rand_X = [10, 10, 10, 10, 10, 10, 10]
+    rand_X = [10 for _ in range(len(game_map.inamic))]
     rnd = 10
     #rd = create_rd(rand_X, nr_rd,game_map)
     cnt_tras = 0
@@ -130,6 +148,10 @@ def play_game(window, current_level):
         if check_win_condition(game_map) is True:
             draw(window, background_tiles, bg_image, player, current_level, bullets, enemy_bullets,game_map,boss_bullets,split_bullets)
             winning_message(window)
+            # should help with the messages who are not always being displayed
+            pygame.display.flip() 
+            pygame.event.pump()
+
             current_level.setWinStatus(1)
             reset_map(game_map)
             pygame.time.delay(3000)
@@ -138,17 +160,20 @@ def play_game(window, current_level):
         if check_loss_condition(player) is True:
             draw(window, background_tiles, bg_image, player, current_level, bullets, enemy_bullets,game_map,boss_bullets,split_bullets)
             losing_message(window)
+
+            pygame.display.flip() 
+            pygame.event.pump()
+
             reset_map(game_map)
             pygame.time.delay(3000)
             run = False
 
-# Funcția care creează ecranul și rulează jocul
+# main function -- rulam jocul
 def main(window):
     clock = pygame.time.Clock()
     
-    # --- PASUL 1: RULĂM MENIUL ---
+    # rulam meniul
     main_menu(window)
-    # -----------------------------
 
     # Levels array and choosing a level
     levels = create_levels()
@@ -171,7 +196,7 @@ def main(window):
                 break
 
     pygame.quit()
-    sys.exit() # Folosim sys.exit() pentru a închide curat
+    sys.exit()
 
 if __name__ == "__main__":
     main(window)
