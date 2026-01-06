@@ -103,7 +103,8 @@ def levels_menu(window, levels):
         button1 = draw_button(window, levels[0], levels[0].getName(), WIDTH / 2 - 100, 320, 200, 60)
         button2 = draw_button(window, levels[1], "Level 2", WIDTH / 2 - 100, 420, 200, 60)
         button3 = draw_button(window, levels[2], "Level 3", WIDTH / 2 - 100, 520, 200, 60)
-        button4 = draw_button(window, levels[3], "Bo$$ Level", WIDTH / 2 - 100, 620, 200, 60)
+        button4 = draw_button(window, levels[3], "Level 4", WIDTH / 2 - 100, 620, 200, 60)
+        button5 = draw_button(window, levels[4], "Bo$$ Level", WIDTH / 2 - 100, 720, 200, 60)
 
         # draws the locked message until said time
         current_time = pygame.time.get_ticks()
@@ -153,6 +154,14 @@ def levels_menu(window, levels):
                         show_message_until = pygame.time.get_ticks() + 2000
                     else:
                         chosen_level = levels[3]
+                        run = False
+
+                elif button5.collidepoint(mouse_pos):
+                    if (levels[4].getState() == "locked"):
+                        level_with_locked_message = levels[4]
+                        show_message_until = pygame.time.get_ticks() + 2000
+                    else:
+                        chosen_level = levels[4]
                         run = False
     return chosen_level
 

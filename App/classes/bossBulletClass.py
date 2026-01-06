@@ -8,6 +8,7 @@ from utils.backgroudFunc import *
 import sys
 
 class boss_bullet_class(object):
+    #identic ca la gloantele normale
     def __init__(self,x,y,radius,color,facing,up):
         self.x = x
         self.y = y
@@ -22,6 +23,7 @@ class boss_bullet_class(object):
     def draw(self,win):
         pygame.draw.circle(win, self.color, (self.x,self.y), self.radius)
     def split(self,bullets):
+        #impartirea in 4 gloante normale
         bullets.append(bullet_class(round(self.x), round(self.y), 8, (255,0,0), 1,1,0))
         bullets.append(bullet_class(round(self.x), round(self.y), 8, (255,0,0), -1,1,0))
         bullets.append(bullet_class(round(self.x), round(self.y), 8, (255,0,0), 0,1,-1))

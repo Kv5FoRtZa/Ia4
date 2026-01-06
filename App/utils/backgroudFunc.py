@@ -78,10 +78,16 @@ def draw_health_bar(window, player):
     pygame.draw.rect(window, (255, 255, 255), border_rect, 2)
 
 def draw_boss_bar(window, boss):
+    #bara de hp pt boss
+    #apare doar la levelul cu boss-ul
+    #este rosie cu alb
+    font = pygame.font.SysFont('Comic Sans MS', 30)
+    text = font.render("The evil Rectorat's hp", False, (0, 0, 0))
+    window.blit(text, (WIDTH // 2 - 100,70))
     bar_width = WIDTH // 3
     bar_height = 15
     x_pos = WIDTH // 3
-    y_pos = 150
+    y_pos = 55
     
     ratio = boss.hp / 20
     fill_width = ratio * bar_width

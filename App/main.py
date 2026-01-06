@@ -42,16 +42,34 @@ def main_menu(window):
         # 1. Titlul
         title_font = get_font(100)
         title_text = title_font.render("EVO HUNTER", True, (255, 255, 255))
+        font = pygame.font.SysFont('Comic Sans MS', 30)
+        font2 = pygame.font.SysFont('Comic Sans MS', 70)
+        text1 = font.render("Bine ai venit!", False, (200, 200, 200))
+        text2 = font.render("In acest joc trebuie sa vanezi goblini mov evil!", False, (200, 200, 200))
+        text3 = font.render("Esti singurul care ii poate opri!", False, (200, 200, 200))
+        text1_rect = title_text.get_rect(center=(WIDTH/2, 300))
+        text2_rect = title_text.get_rect(center=(WIDTH/2, 330))
+        text3_rect = title_text.get_rect(center=(WIDTH/2, 360))
         title_rect = title_text.get_rect(center=(WIDTH/2, 200))
+        window.blit(text1, text1_rect)
+        window.blit(text2, text2_rect)
+        window.blit(text3, text3_rect)
         window.blit(title_text, title_rect)
 
-        instruct_font = get_font(50)
+        instruct_font = get_font(90)
         instruct_text = instruct_font.render("Click to Play", True, (200, 200, 200))
         instruct_rect = instruct_text.get_rect(center=(WIDTH/2, HEIGHT/2))
         window.blit(instruct_text, instruct_rect)
-
+        Inst = font2.render("Instructiuni:", False, (200, 200, 200))
+        i1 = font.render("Mers pe wasd sau pe sageti", False, (200, 200, 200))
+        i2 = font.render("Pentru a impusca apasa click", False, (200, 200, 200))
+        Inst_rect = Inst.get_rect(center=(WIDTH/2, 2 * HEIGHT/3))
+        I1_rect = Inst.get_rect(center=(WIDTH/2, 2 * HEIGHT/3 + 50))
+        I2_rect = Inst.get_rect(center=(WIDTH/2, 2 * HEIGHT/3 + 75))
+        window.blit(Inst, Inst_rect)
+        window.blit(i1, I1_rect)
+        window.blit(i2, I2_rect)
         pygame.display.update()
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()

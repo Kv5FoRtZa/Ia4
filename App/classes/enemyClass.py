@@ -26,6 +26,8 @@ class enemy(object):
         self.move(game_map)
         win.blit((self.walk[0]), (self.x,self.y))
     def move(self,game_map):
+        #in principiu merge pana loveste ceva/ atinge maximul
+        #apoi se intoarce
         if self.vel > 0:
             if self.x < self.path[1] + self.vel:
                 vf = 0
@@ -61,15 +63,18 @@ class enemy(object):
                 self.x += self.vel
                 self.walkCount = 0
     def fire(self,facing):
+        # trage 
         bullets = []
         if len(bullets) < 4:
              bullets.append(bullet_class(round(self.x + 25), round(self.y + 25), 6, (255,0,0), facing,0)) 
     def damage(self):
+        #are 2 hp, si moare in 2 hits
         self.hp -= 1
         if self.hp == 0:
             self.x = -1000
             self.y = -1000
     def exit(self):
+        #se respawneaza cand se rejoaca
         self.hp = 2
         self.x = self.initialx
         self.y = self.initialy
