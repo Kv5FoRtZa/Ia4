@@ -31,45 +31,89 @@ window = pygame.display.set_mode((WIDTH, HEIGHT))
 def get_font(size): 
     return pygame.font.SysFont("comicsans", size)
 
+def draw_3d_box(window, rect, color):
+    # desenam umbra
+    shadow_rect = pygame.Rect(rect.x + 5, rect.y + 5, rect.width, rect.height)
+    pygame.draw.rect(window, (40, 40, 40), shadow_rect, border_radius=15)
+
+    # desenam cutia
+    pygame.draw.rect(window, color, rect, border_radius=15)
+
+    # adaugam contur
+    pygame.draw.rect(window, (200, 200, 200), rect, 2, border_radius=15)
+
 def main_menu(window):
     run = True
     clock = pygame.time.Clock()
     
+    # colors used
+    BG_COLOR = LIGHT_MUTED_BLUE
+    TEXT_COLOR = LIGHT_GRAY
+    TITLE_COLOR = WHITE
+    BOX_COLOR = DARK_MUTED_BLUE
+
     while run:
         clock.tick(FPS)
-        window.fill((94, 129, 162))
+        window.fill(BG_COLOR)
         
-        # 1. Titlul
-        title_font = get_font(100)
-        title_text = title_font.render("EVO HUNTER", True, (255, 255, 255))
-        font = pygame.font.SysFont('Comic Sans MS', 30)
-        font2 = pygame.font.SysFont('Comic Sans MS', 70)
-        text1 = font.render("Bine ai venit!", False, (200, 200, 200))
-        text2 = font.render("In acest joc trebuie sa vanezi goblini mov evil!", False, (200, 200, 200))
-        text3 = font.render("Esti singurul care ii poate opri!", False, (200, 200, 200))
-        text1_rect = title_text.get_rect(center=(WIDTH/2, 300))
-        text2_rect = title_text.get_rect(center=(WIDTH/2, 330))
-        text3_rect = title_text.get_rect(center=(WIDTH/2, 360))
+        # Titlul mare
+        title_font = get_font(120)
+        title_text = title_font.render("EVO HUNTER", True, TITLE_COLOR)
         title_rect = title_text.get_rect(center=(WIDTH/2, 200))
-        window.blit(text1, text1_rect)
-        window.blit(text2, text2_rect)
-        window.blit(text3, text3_rect)
         window.blit(title_text, title_rect)
 
-        instruct_font = get_font(90)
-        instruct_text = instruct_font.render("Click to Play", True, (200, 200, 200))
-        instruct_rect = instruct_text.get_rect(center=(WIDTH/2, HEIGHT/2))
+        # fontul pt poveste
+        font = get_font(30)
+
+        # textele
+        text1 = font.render("Bine ai venit!", True, TEXT_COLOR)
+        text2 = font.render("In acest joc trebuie sa vanezi goblini mov evil!", True, TEXT_COLOR)
+        text3 = font.render("Esti singurul care ii poate opri!", True, TEXT_COLOR)
+
+        # creat rect pt story box
+        story_box = pygame.Rect(0, 0, 700, 150)
+        story_box.center = (WIDTH/2, 360)
+
+        # draw the box
+        draw_3d_box(window, story_box, BOX_COLOR)
+
+        # draw textele in cutie
+        window.blit(text1, text1.get_rect(center=(WIDTH/2, 330)))
+        window.blit(text2, text2.get_rect(center=(WIDTH/2, 360)))
+        window.blit(text3, text3.get_rect(center=(WIDTH/2, 395)))
+
+        # button de play 
+        instruct_font = get_font(80)
+        instruct_text = instruct_font.render("Click to Play", True, TITLE_COLOR)
+        instruct_rect = instruct_text.get_rect(center=(WIDTH/2, 530))
+
+        # efect de schimbare de culoare pt button de play 
+        if instruct_rect.collidepoint(pygame.mouse.get_pos()):
+            instruct_text = instruct_font.render("Click to Play", True, (255, 215, 0))
+        
+        # display the button
         window.blit(instruct_text, instruct_rect)
-        Inst = font2.render("Instructiuni:", False, (200, 200, 200))
-        i1 = font.render("Mers pe wasd sau pe sageti", False, (200, 200, 200))
-        i2 = font.render("Pentru a impusca apasa click", False, (200, 200, 200))
-        Inst_rect = Inst.get_rect(center=(WIDTH/2, 2 * HEIGHT/3))
-        I1_rect = Inst.get_rect(center=(WIDTH/2, 2 * HEIGHT/3 + 50))
-        I2_rect = Inst.get_rect(center=(WIDTH/2, 2 * HEIGHT/3 + 75))
-        window.blit(Inst, Inst_rect)
-        window.blit(i1, I1_rect)
-        window.blit(i2, I2_rect)
+
+        # instructiuni - text
+        font2 = get_font(55)
+        inst_title = font2.render("Instructiuni:", True, TEXT_COLOR)
+        i1 = font.render("Mers pe WASD sau pe sageti", True, TEXT_COLOR)
+        i2 = font.render("Pentru a impusca apasa Click", True, TEXT_COLOR)
+
+        # cutie pt instructiuni
+        inst_box = pygame.Rect(0, 0, 600, 150)
+        inst_box.center = (WIDTH/2, 700)
+        
+        # draw the box
+        draw_3d_box(window, inst_box, BOX_COLOR)
+
+        # put the text in the box
+        window.blit(inst_title, inst_title.get_rect(center=(WIDTH/2, 660)))
+        window.blit(i1, i1.get_rect(center=(WIDTH/2, 705)))
+        window.blit(i2, i2.get_rect(center=(WIDTH/2, 740)))
+
         pygame.display.update()
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
