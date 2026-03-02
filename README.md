@@ -1,4 +1,4 @@
-# Ia4
+# Evo Hunter - 2D game in Python
 	Proiect Informatica Aplicata 4
 		Bahaciu Raisa-Georgiana, Morus Alexandru, Zamfir Irina-Maria
 	
